@@ -939,6 +939,10 @@ function renderScreen(name) {
 
 // ─── HOME ─────────────────────────────────────────────────────────────────────
 function renderHome() {
+  // 1. Run translations FIRST to set up the static layout texts
+  applyTranslations();
+
+  // 2. Run the math and update your stats SECOND so they stick
   const pot = state.players.length * ENTRY_FEE;
   document.getElementById('heroPot').textContent = pot.toLocaleString('sv-SE') + ' kr';
   document.getElementById('heroPlayers').textContent = state.players.length;
@@ -946,10 +950,10 @@ function renderHome() {
   document.getElementById('stat1Value').textContent = Math.round(pot * 0.6).toLocaleString('sv-SE') + ' kr';
   document.getElementById('stat2Value').textContent = Math.round(pot * 0.3).toLocaleString('sv-SE') + ' kr';
   document.getElementById('stat3Value').textContent = Math.round(pot * 0.1).toLocaleString('sv-SE') + ' kr';
+  
   const openStageIdx = ['wave1','wave2','wave3','wave4','wave5'].findIndex(w => state.stageStatus[w] === 'open');
   const idx = openStageIdx === -1 ? 0 : openStageIdx;
   document.getElementById('stageBannerStatus').textContent = t('stageBannerStatuses')[idx];
-  applyTranslations();
 }
 
 // ─── PREDICTIONS ─────────────────────────────────────────────────────────────
