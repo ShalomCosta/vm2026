@@ -962,6 +962,7 @@ function renderHome() {
   const openStageIdx = ['wave1','wave2','wave3','wave4','wave5'].findIndex(w => state.stageStatus[w] === 'open');
   const idx = openStageIdx === -1 ? 0 : openStageIdx;
   document.getElementById('stageBannerStatus').textContent = t('stageBannerStatuses')[idx];
+  renderPlayerStageList();
 }
 
 // ─── PREDICTIONS ─────────────────────────────────────────────────────────────
@@ -1344,7 +1345,41 @@ function renderStageList() {
     list.appendChild(row);
   });
 }
-
+function renderPlayerStageList() {
+  const list = document.getElementById('playerStageList');
+  if (!list) return;
+  list.innerHTML = '';
+  
+  const stages = ['wave1', 'wave2', 'wave3', 'wave4', 'wave5'];
+  
+  stages.forEach((w, i) => {
+    const status = state.stageStatus[w];
+    const label = t('stages')[i];
+    const deadline = t('stageDeadlines')[i];
+    
+    const row = document.createElement('div');
+    row.className = 'admin-stage-row player-view-row'; // Reuses your existing card styling from image_a68621.png
+    
+    let statusBadge = '';
+    if (status === 'open') {
+      statusBadge = `<span class="badge-status badge-open">${state.lang === 'sv' ? 'Öppen' : 'Open'}</span>`;
+    } else if (status === 'scored') {
+      statusBadge = `<span class="badge-status badge-scored">${t('scoredLabel')}</span>`;
+    } else {
+      statusBadge = `<span class="badge-status badge-locked" style="opacity:0.6;">🔒 ${state.lang === 'sv' ? 'Låst' : 'Locked'}</span>`;
+    }
+    
+    row.innerHTML = `
+      <div>
+        <div class="admin-stage-name">${label}</div>
+        <div style="font-size:11px;color:var(--muted)">${deadline}</div>
+      </div>
+      <div class="admin-stage-actions">${statusBadge}</div>
+    `;
+    
+    list.appendChild(row);
+  });
+}
 function unlockStage(wave) {
   state.stageStatus[wave] = 'open';
   saveState();
