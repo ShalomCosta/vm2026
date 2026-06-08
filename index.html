@@ -1212,10 +1212,15 @@ async function addPlayer() {
   const name = input.value.trim();
   if (!name || state.players.includes(name)) return;
 
-  // FIX: Pass headers as an option block inside the insert/request configuration
-  const { data, error } = await _supabase
+  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: {
+      headers: { 'x-admin-pass': 'VM2026admin' }
+    }
+  });
+
+  const { data, error } = await adminClient
     .from('players')
-    .insert([{ id: name, name: name, points: 0 }], { headers: { 'x-admin-pass': 'VM2026admin' } });
+    .insert([{ id: name, name: name, points: 0 }]);
 
   if (error) {
     console.error("Supabase error adding player:", error.message);
@@ -1223,7 +1228,6 @@ async function addPlayer() {
     return;
   }
 
-  // Update local state if successful
   state.players.push(name);
   state.scores[name] = 0;
   input.value = '';
@@ -1236,10 +1240,15 @@ async function addPlayer() {
 }
 
 async function removePlayer(name) {
-  // FIX: For deletes, headers are passed as an options object inside the delete() initialization call
-  const { data, error } = await _supabase
+  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: {
+      headers: { 'x-admin-pass': 'VM2026admin' }
+    }
+  });
+
+  const { data, error } = await adminClient
     .from('players')
-    .delete({ headers: { 'x-admin-pass': 'VM2026admin' } })
+    .delete()
     .eq('id', name);
 
   if (error) {
@@ -1248,7 +1257,6 @@ async function removePlayer(name) {
     return;
   }
 
-  // Clear local state elements if successful
   state.players = state.players.filter(p => p !== name);
   delete state.answers[name];
   delete state.scores[name];
@@ -1378,19 +1386,18 @@ function setCorrect(qId, value) {
   saveState();
 }
 
-function applyScores() {
+async function applyScores() {
   if (!scoringWave) return;
   const qs = QUESTIONS[scoringWave] || [];
+  
+  // Calculate updates locally first
   qs.forEach(q => {
     const correct = state.correctAnswers[q.id];
     if (correct === undefined || correct === '') return;
     state.players.forEach(p => {
       const ans = (state.answers[p] || {})[q.id];
       if (ans === undefined) return;
-      if (q.type === 'number') {
-        // closest wins — find best first
-        return;
-      } else {
+      if (q.type !== 'number') {
         const match = String(ans).trim().toLowerCase() === String(correct).trim().toLowerCase();
         if (match) {
           state.scores[p] = (state.scores[p] || 0) + q.pts;
@@ -1398,7 +1405,7 @@ function applyScores() {
       }
     });
   });
-  // Handle number questions (closest wins)
+
   qs.filter(q => q.type === 'number').forEach(q => {
     const correct = parseInt(state.correctAnswers[q.id]);
     if (isNaN(correct)) return;
@@ -1414,11 +1421,26 @@ function applyScores() {
       if (diff === minDiff) state.scores[p] = (state.scores[p] || 0) + q.pts;
     });
   });
+
   state.stageStatus[scoringWave] = 'scored';
   saveState();
+
+  // Push updated points arrays up to Supabase
+  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { 'x-admin-pass': 'VM2026admin' } }
+  });
+
+  for (const name of state.players) {
+    await adminClient
+      .from('players')
+      .update({ points: state.scores[name] || 0 })
+      .eq('id', name);
+  }
+
   showToast(t('toastScoresApplied'));
   closeScoringPanel();
   renderStageList();
+  renderLeaderboard();
 }
 
 function renderAdjustSelect() {
@@ -1426,16 +1448,35 @@ function renderAdjustSelect() {
   sel.innerHTML = state.players.map(p => `<option value="${p}">${p}</option>`).join('');
 }
 
-function applyManualAdjust() {
+async function applyManualAdjust() {
   const player = document.getElementById('adjustPlayer').value;
   const pts = parseInt(document.getElementById('adjustPoints').value) || 0;
   if (!player) return;
+
+  // 1. Update local state variables
   state.scores[player] = (state.scores[player] || 0) + pts;
+  
+  // 2. Sync mutation directly up to Supabase
+  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { 'x-admin-pass': 'VM2026admin' } }
+  });
+
+  const { error } = await adminClient
+    .from('players')
+    .update({ points: state.scores[player] })
+    .eq('id', player);
+
+  if (error) {
+    console.error("Supabase failed manual point adjustment sync:", error.message);
+    showToast(state.lang === 'sv' ? "Kunde inte uppdatera databas" : "Failed to sync adjustment");
+    return;
+  }
+
   document.getElementById('adjustPoints').value = '';
   saveState();
   showToast(t('toastAdjusted'));
+  renderLeaderboard(); 
 }
-
 // ─── CSV EXPORT ───────────────────────────────────────────────────────────────
 function exportCSV() {
   const allQs = QUESTIONS.wave1;
