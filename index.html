@@ -1212,19 +1212,18 @@ async function addPlayer() {
   const name = input.value.trim();
   if (!name || state.players.includes(name)) return;
 
-  // 1. Send to Supabase first with your RLS security header
+  // FIX: Pass headers as an option block inside the insert/request configuration
   const { data, error } = await _supabase
     .from('players')
-    .insert([{ id: name, name: name, points: 0 }]) // Using name as ID based on your schema
-    .headers({ 'x-admin-pass': 'VM2026admin' });
+    .insert([{ id: name, name: name, points: 0 }], { headers: { 'x-admin-pass': 'VM2026admin' } });
 
   if (error) {
     console.error("Supabase error adding player:", error.message);
     showToast(state.lang === 'sv' ? "Kunde inte spara i databasen" : "Failed to save to database");
-    return; // Stop execution if the database rejects the write
+    return;
   }
 
-  // 2. Update local state if the database write succeeded
+  // Update local state if successful
   state.players.push(name);
   state.scores[name] = 0;
   input.value = '';
@@ -1237,20 +1236,19 @@ async function addPlayer() {
 }
 
 async function removePlayer(name) {
-  // 1. Delete from Supabase first with your RLS security header
+  // FIX: For deletes, headers are passed as an options object inside the delete() initialization call
   const { data, error } = await _supabase
     .from('players')
-    .delete()
-    .eq('id', name)
-    .headers({ 'x-admin-pass': 'VM2026admin' });
+    .delete({ headers: { 'x-admin-pass': 'VM2026admin' } })
+    .eq('id', name);
 
   if (error) {
     console.error("Supabase error removing player:", error.message);
     showToast(state.lang === 'sv' ? "Kunde inte ta bort från databasen" : "Failed to delete from database");
-    return; // Stop execution if the database rejects the delete
+    return;
   }
 
-  // 2. Clear out local state elements
+  // Clear local state elements if successful
   state.players = state.players.filter(p => p !== name);
   delete state.answers[name];
   delete state.scores[name];
