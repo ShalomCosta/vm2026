@@ -1097,14 +1097,17 @@ function buildQuestionCard(q, locked) {
     ${inputHtml}
   </div>`;
 }
-
-function saveAnswer(qId, value) {
+// ─── PREDICTIONS (DB TRACKING & LOCK ENGINE) ─────────────────────────────────
+async function saveAnswer(qId, value) {
   if (!state.currentPlayer) return;
   if (state.submitted[state.currentPlayer]) return;
   if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
+  
+  // Update local memory
   state.answers[state.currentPlayer][qId] = value;
   saveState();
-  // refresh progress only
+
+  // Progress bar rendering math
   const allQs = QUESTIONS.wave1;
   const answered = allQs.filter(q => {
     const a = (state.answers[state.currentPlayer] || {})[q.id];
@@ -1120,20 +1123,45 @@ function saveAnswer(qId, value) {
   }
 }
 
-function adjustNumber(qId, delta) {
+async function adjustNumber(qId, delta) {
   if (!state.currentPlayer || state.submitted[state.currentPlayer]) return;
   if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
+  
   const cur = state.answers[state.currentPlayer][qId] || 0;
   const next = Math.max(0, cur + delta);
   state.answers[state.currentPlayer][qId] = next;
+  
   const el = document.getElementById('num_' + qId);
   if (el) el.textContent = next;
   saveState();
 }
 
-function submitAnswers() {
+async function submitAnswers() {
   if (!state.currentPlayer) return;
-  state.submitted[state.currentPlayer] = new Date().toISOString();
+  
+  const player = state.currentPlayer;
+  const currentAnswersObject = state.answers[player] || {};
+
+  // Push the final answers payload into your Supabase predictions table
+  const { data, error } = await _supabase
+    .from('predictions')
+    .upsert([
+      { 
+        player_id: player, 
+        wave: 1, 
+        answers: currentAnswersObject,
+        locked: true 
+      }
+    ], { onConflict: 'player_id,wave' }); 
+
+  if (error) {
+    console.error("Supabase failed to lock predictions:", error.message);
+    alert(state.lang === 'sv' ? "Kunde inte skicka tipsen till databasen!" : "Failed to sync predictions to database!");
+    return;
+  }
+
+  // Update local submission status only if the database write succeeded
+  state.submitted[player] = new Date().toISOString();
   saveState();
   showToast(t('toastSubmitted'));
   renderQuestions();
