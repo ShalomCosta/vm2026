@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>VM 2026 — Familjeligan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1a1a2e;
+  --navy2: #16213e;
+  --gold: #e8c96a;
+  --silver: #b0bec5;
+  --bronze: #cd7f32;
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --bg: #f4f4f0;
+  --card: #ffffff;
+  --border: #e0e0d8;
+  --text: #1a1a2e;
+  --muted: #888880;
+  --sweden-blue: #006AA7;
+  --sweden-yellow: #FECC02;
+  --brazil-green: #009C3B;
+  --brazil-yellow: #FFDF00;
+  --brazil-blue: #002776;
+  --pill-active-bg: #e8e9f0;
+  --pill-active-color: #1a1a2e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.app-header {
+  background: var(--navy);
+  padding: 16px 20px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+.header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: white;
+  letter-spacing: 1px;
+}
+.lang-btn {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+}
+.header-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+}
+
+/* NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: white;
+  border-top: 0.5px solid var(--border);
+  display: flex;
+  padding: 8px 6px 12px;
+  z-index: 100;
+  gap: 4px;
+}
+.nav-item {
+  flex: 1;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  padding: 5px 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+  border: none;
+  background: transparent;
+  font-family: 'DM Sans', sans-serif;
+}
+.nav-item.active {
+  color: var(--navy);
+  background: var(--pill-active-bg);
+}
+.nav-item svg {
+  display: block;
+  margin: 0 auto 2px;
+  width: 18px;
+  height: 18px;
+}
+
+/* MAIN CONTENT */
+.screen { display: none; padding: 16px 16px 90px; }
+.screen.active { display: block; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+
+/* HOME SCREEN */
+.home-hero {
+  background: var(--navy2);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.home-hero::before {
+  content: '⚽';
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  font-size: 80px;
+  opacity: 0.06;
+}
+.home-hero-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.home-hero-pot {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.home-hero-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.stat-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.stat-card-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.stat-card-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: var(--navy);
+  line-height: 1;
+}
+.stage-banner {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.stage-banner-text { font-size: 12px; color: rgba(255,255,255,0.7); }
+.stage-banner-status { font-size: 12px; font-weight: 600; color: var(--gold); }
+.btn {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: transform 0.1s, opacity 0.1s;
+  margin-bottom: 8px;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--navy); color: white; }
+.btn-secondary { background: var(--card); color: var(--navy); border: 0.5px solid var(--border); }
+.btn-sm {
+  display: inline-block;
+  width: auto;
+  padding: 5px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  margin-bottom: 0;
+}
+.btn-danger { background: var(--red); color: white; }
+.btn-success { background: var(--green); color: white; }
+
+/* PLAYER SELECTOR */
+.player-selector {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.player-chip {
+  padding: 10px 8px;
+  border-radius: 10px;
+  border: 0.5px solid var(--border);
+  background: var(--card);
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+.player-chip.selected {
+  background: var(--navy);
+  color: white;
+  border-color: var(--navy);
+}
+.player-chip .avatar-initials {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin: 0 auto 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* PROGRESS BAR */
+.progress-wrap { margin-bottom: 14px; }
+.progress-label { font-size: 12px; color: var(--muted); margin-bottom: 5px; display: flex; justify-content: space-between; }
+.progress-track { height: 5px; background: var(--border); border-radius: 3px; }
+.progress-fill { height: 5px; background: var(--navy); border-radius: 3px; transition: width 0.3s; }
+
+/* QUESTIONS */
+.section-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: var(--navy);
+  margin: 18px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-badge {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.badge-world { background: #e8f4fd; color: #1a6fa8; }
+.badge-sweden { background: #e6f0f8; color: var(--sweden-blue); }
+.badge-brazil { background: #e8f5ee; color: var(--brazil-green); }
+.badge-locked { background: #f0f0ee; color: var(--muted); }
+
+.q-card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.q-card.locked { opacity: 0.45; pointer-events: none; }
+.q-card.answered { border-color: #c8e6c9; }
+.q-label { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.q-pts { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.q-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+.q-input:focus { border-color: var(--navy); }
+.q-input:disabled { opacity: 0.5; cursor: not-allowed; }
+.toggle-row { display: flex; gap: 6px; }
+.toggle-btn {
+  flex: 1;
+  padding: 7px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border);
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  color: var(--muted);
+}
+.toggle-btn.active-yes { background: #e8f5ee; color: #2e7d32; border-color: #a5d6a7; }
+.toggle-btn.active-no { background: #fdecea; color: #c62828; border-color: #ef9a9a; }
+.select-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.select-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border);
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  color: var(--muted);
+}
+.select-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+.number-input-row { display: flex; align-items: center; gap: 10px; }
+.number-btn {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border);
+  background: var(--bg);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--navy);
+}
+.number-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--navy);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* SUBMIT BUTTON */
+.submit-wrap { margin-top: 16px; }
+
+/* LEADERBOARD */
+.pot-strip {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.pot-strip-item { text-align: center; }
+.pot-strip-label { font-size: 10px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
+.pot-strip-value { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--gold); }
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 6px;
+}
+.lb-pos { font-family: 'Bebas Neue', sans-serif; font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+.lb-pos.gold { color: #c9a227; }
+.lb-pos.silver { color: #9e9e9e; }
+.lb-pos.bronze { color: var(--bronze); }
+.lb-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  flex-shrink: 0;
+}
+.lb-name { flex: 1; font-size: 14px; font-weight: 500; }
+.lb-pts { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--navy); }
+.lb-sub { font-size: 11px; color: var(--muted); text-align: center; margin-top: 10px; }
+.lb-row.current-player { border-color: var(--navy); background: #f0f0f8; }
+
+/* ADMIN */
+.admin-login {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 30px 0;
+}
+.admin-login h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.admin-stage-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.admin-stage-name { font-size: 14px; font-weight: 500; }
+.admin-stage-actions { display: flex; align-items: center; gap: 8px; }
+.badge-status {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.badge-open { background: #e8f5ee; color: #2e7d32; }
+.badge-locked { background: #f0f0ee; color: var(--muted); }
+.badge-scored { background: #e8f4fd; color: #1a6fa8; }
+
+/* SCORING VIEW */
+.scoring-view { display: none; }
+.scoring-view.active { display: block; }
+.scoring-q {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.scoring-q-label { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--navy); }
+.answers-grid { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+.answer-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 4px 0; border-bottom: 0.5px solid var(--border); }
+.answer-row:last-child { border-bottom: none; }
+.answer-player { color: var(--muted); }
+.answer-value { font-weight: 500; color: var(--text); }
+.correct-input-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.correct-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+/* MANUAL ADJUST */
+.manual-adjust { margin-top: 16px; }
+.manual-adjust h3 { font-family: 'Bebas Neue', sans-serif; font-size: 18px; margin-bottom: 10px; }
+.adjust-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.adjust-row select, .adjust-row input {
+  padding: 7px 10px;
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+}
+.adjust-row select { flex: 2; }
+.adjust-row input { flex: 1; }
+
+/* EXPORT BTN */
+.export-btn {
+  background: #e8f5ee;
+  color: #2e7d32;
+  border: 0.5px solid #a5d6a7;
+  border-radius: 10px;
+  padding: 11px;
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+/* ADD PLAYER */
+.add-player-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.add-player-row input {
+  flex: 1;
+  padding: 9px 12px;
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
+}
+.player-list-admin { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.player-admin-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+}
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 4px;
+}
+
+/* WAVE LOCK BANNER */
+.wave-locked-banner {
+  text-align: center;
+  padding: 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* SUBMITTED BANNER */
+.submitted-banner {
+  background: #e8f5ee;
+  border: 0.5px solid #a5d6a7;
+  border-radius: 10px;
+  padding: 14px 16px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.submitted-banner h3 { color: #2e7d32; font-size: 15px; margin-bottom: 4px; }
+.submitted-banner p { color: #4caf50; font-size: 12px; }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--navy);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 200;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* DIVIDER */
+.divider { height: 0.5px; background: var(--border); margin: 14px 0; }
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.flag { font-size: 16px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <span class="header-title" id="headerTitle">VM 2026 — Familjeligan</span>
+    <button class="lang-btn" onclick="toggleLang()" id="langBtn">EN</button>
+  </div>
+  <div class="header-sub" id="headerSub">11 jun – 19 jul · USA / Kanada / Mexiko</div>
+</div>
+
+<!-- HOME SCREEN -->
+<div class="screen active" id="screen-home">
+  <div class="home-hero">
+    <div class="home-hero-label" id="heroLabel">TOTAL POTT</div>
+    <div class="home-hero-pot" id="heroPot">0 kr</div>
+    <div class="home-hero-sub" id="heroSub">100 kr per person · Registrerade spelare: <span id="heroPlayers">0</span></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-label" id="stat1Label">1:A PLATS</div>
+      <div class="stat-card-value" id="stat1Value">0 kr</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label" id="stat2Label">2:A PLATS</div>
+      <div class="stat-card-value" id="stat2Value">0 kr</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label" id="stat3Label">3:E PLATS</div>
+      <div class="stat-card-value" id="stat3Value">0 kr</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label" id="stat4Label">DEADLINE</div>
+      <div class="stat-card-value" style="font-size:18px;">11 Jun</div>
+    </div>
+  </div>
+  <div class="stage-banner">
+    <span class="stage-banner-text" id="stageBannerText">Fas öppen:</span>
+    <span class="stage-banner-status" id="stageBannerStatus">Gruppspel ⚽</span>
+  </div>
+  <button class="btn btn-primary" onclick="goToScreen('predictions')" id="btnMyTips">Mina tips →</button>
+  <button class="btn btn-secondary" onclick="goToScreen('leaderboard')" id="btnLeaderboard">Tabellen</button>
+</div>
+
+<!-- PREDICTIONS SCREEN -->
+<div class="screen" id="screen-predictions">
+  <div id="playerSelectorWrap">
+    <p style="font-size:13px; color:var(--muted); margin-bottom:8px;" id="selectPlayerLabel">Välj ditt namn:</p>
+    <div class="player-selector" id="playerSelector"></div>
+  </div>
+  <div id="predictionsContent" style="display:none;">
+    <div class="submitted-banner" id="submittedBanner" style="display:none;">
+      <h3 id="submittedTitle">✓ Tips inlämnade!</h3>
+      <p id="submittedSub">Dina svar är sparade. Lycka till!</p>
+    </div>
+    <div id="questionsWrap"></div>
+    <div class="submit-wrap" id="submitWrap">
+      <button class="btn btn-primary" onclick="submitAnswers()" id="submitBtn">Lämna in mina tips →</button>
+    </div>
+  </div>
+  <div id="noPlayersMsg" style="display:none; text-align:center; padding:40px 20px; color:var(--muted); font-size:13px;" id="noPlayersText">Inga spelare tillagda än. Be admin lägga till spelare.</div>
+</div>
+
+<!-- LEADERBOARD SCREEN -->
+<div class="screen" id="screen-leaderboard">
+  <div class="pot-strip">
+    <div class="pot-strip-item">
+      <div class="pot-strip-label" id="lbPotLabel">POTT</div>
+      <div class="pot-strip-value" id="lbPot">0 kr</div>
+    </div>
+    <div class="pot-strip-item">
+      <div class="pot-strip-label">🥇</div>
+      <div class="pot-strip-value" id="lb1st">0 kr</div>
+    </div>
+    <div class="pot-strip-item">
+      <div class="pot-strip-label">🥈</div>
+      <div class="pot-strip-value" id="lb2nd">0 kr</div>
+    </div>
+    <div class="pot-strip-item">
+      <div class="pot-strip-label">🥉</div>
+      <div class="pot-strip-value" id="lb3rd">0 kr</div>
+    </div>
+  </div>
+  <div id="leaderboardList"></div>
+  <p class="lb-sub" id="lbSub">Nästa rättning efter gruppspelet · 28 jun</p>
+</div>
+
+<!-- ADMIN SCREEN -->
+<div class="screen" id="screen-admin">
+  <div id="adminLogin">
+    <div class="admin-login">
+      <h2 id="adminLoginTitle">Admin</h2>
+      <p style="font-size:13px; color:var(--muted);" id="adminLoginSub">Ange lösenord för att fortsätta</p>
+      <input type="password" class="q-input" id="adminPassInput" placeholder="Lösenord..." onkeydown="if(event.key==='Enter')checkAdminPass()" />
+      <button class="btn btn-primary" onclick="checkAdminPass()" id="adminLoginBtn">Logga in</button>
+    </div>
+  </div>
+  <div id="adminPanel" style="display:none;">
+    <div class="section-title" id="adminPlayersTitle">Spelare</div>
+    <div class="add-player-row">
+      <input type="text" id="newPlayerInput" placeholder="Namn..." onkeydown="if(event.key==='Enter')addPlayer()" />
+      <button class="btn btn-primary btn-sm" onclick="addPlayer()" id="addPlayerBtn">+ Lägg till</button>
+    </div>
+    <div class="player-list-admin" id="playerListAdmin"></div>
+    <div class="divider"></div>
+    <div class="section-title" id="adminStagesTitle">Faser</div>
+    <div id="stageList"></div>
+    <div class="divider"></div>
+    <div id="scoringPanel" style="display:none;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+        <button class="btn btn-secondary btn-sm" onclick="closeScoringPanel()" id="backBtn">← Tillbaka</button>
+        <span style="font-size:14px; font-weight:600;" id="scoringTitle">Rätta frågor</span>
+      </div>
+      <div id="scoringQuestions"></div>
+      <button class="btn btn-primary" onclick="applyScores()" id="applyScoresBtn">Applicera poäng ✓</button>
+    </div>
+    <div class="manual-adjust" id="manualAdjust">
+      <h3 id="manualAdjustTitle">Manuell justering</h3>
+      <div class="adjust-row">
+        <select id="adjustPlayer"></select>
+        <input type="number" id="adjustPoints" placeholder="Pts" />
+        <button class="btn btn-primary btn-sm" onclick="applyManualAdjust()" id="adjustBtn">+</button>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <button class="export-btn" onclick="exportCSV()" id="exportBtn">⬇ Exportera svar (CSV)</button>
+    <button class="btn btn-secondary" onclick="adminLogout()" id="logoutBtn" style="margin-top:4px;">Logga ut</button>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="goToScreen('home')" id="nav-home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span id="navHome">Hem</span>
+  </button>
+  <button class="nav-item" onclick="goToScreen('predictions')" id="nav-predictions">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <span id="navTips">Tips</span>
+  </button>
+  <button class="nav-item" onclick="goToScreen('leaderboard')" id="nav-leaderboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span id="navTable">Tabell</span>
+  </button>
+  <button class="nav-item" onclick="goToScreen('admin')" id="nav-admin">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+    <span id="navAdmin">Admin</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://riipmtoalkmnpeyvpcns.supabase.co';
+const SUPABASE_ANON_KEY = "sb_publishable_Sy9J2AhO805Wd7IcX7lrzw_f6cILieZ";
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const PRIZE_SPLIT = [0.6, 0.3, 0.1];
+const AVATAR_COLORS = [
+  ['#faeeda','#854f0b'],['#e6f1fb','#0c447c'],['#eaf3de','#3b6d11'],
+  ['#fbeaf0','#993556'],['#eeedfe','#3c3489'],['#e1f5ee','#085041'],
+  ['#faece7','#993c1d'],['#f1efe8','#444441'],['#faeeda','#633806'],
+  ['#e6f1fb','#185fa5']
+];
+
+const TRANSLATIONS = {
+  sv: {
+    headerTitle: 'VM 2026 — Familjeligan',
+    headerSub: '11 jun – 19 jul · USA / Kanada / Mexiko',
+    heroLabel: 'TOTAL POTT',
+    heroSub: '100 kr per person · Registrerade spelare: ',
+    stat1Label: '1:A PLATS', stat2Label: '2:A PLATS', stat3Label: '3:E PLATS', stat4Label: 'DEADLINE',
+    stageBannerText: 'Fas öppen:',
+    btnMyTips: 'Mina tips →', btnLeaderboard: 'Tabellen',
+    selectPlayerLabel: 'Välj ditt namn:',
+    submittedTitle: '✓ Tips inlämnade!', submittedSub: 'Dina svar är sparade. Lycka till!',
+    submitBtn: 'Lämna in mina tips →',
+    noPlayersText: 'Inga spelare tillagda. Be admin lägga till spelare.',
+    lbPotLabel: 'POTT', lbSub: 'Nästa rättning efter gruppspelet · 28 jun',
+    adminLoginTitle: 'Admin', adminLoginSub: 'Ange lösenord för att fortsätta',
+    adminLoginBtn: 'Logga in', adminPassInput: 'Lösenord...',
+    adminPlayersTitle: 'Spelare', addPlayerBtn: '+ Lägg till', newPlayerInput: 'Namn...',
+    adminStagesTitle: 'Faser', backBtn: '← Tillbaka', scoringTitle: 'Rätta frågor',
+    applyScoresBtn: 'Applicera poäng ✓', manualAdjustTitle: 'Manuell justering',
+    adjustBtn: '+', exportBtn: '⬇ Exportera svar (CSV)', logoutBtn: 'Logga ut',
+    unlockBtn: 'Lås upp', scoreBtn: 'Rätta', scoredLabel: 'Rättad',
+    navHome: 'Hem', navTips: 'Tips', navTable: 'Tabell', navAdmin: 'Admin',
+    langBtn: 'EN',
+    stages: ['Gruppspel','Omgång 32','Kvartsfinaler','Semifinaler','Final'],
+    stageDeadlines: ['Deadline: 11 jun','Öppnar: 1 jul','Öppnar: 9 jul','Öppnar: 15 jul','Öppnar: 19 jul'],
+    correctAnswerPlaceholder: 'Rätt svar...',
+    correctYes: 'Ja', correctNo: 'Nej',
+    ptsLabel: 'poäng',
+    answeredOf: 'av',
+    questionsAnswered: 'frågor besvarade',
+    lockedWaveText: 'Låst — öppnar senare',
+    progressLabel: 'frågor besvarade',
+    toastSubmitted: 'Tips inlämnade! ✓',
+    toastPlayerAdded: 'Spelare tillagd!',
+    toastPlayerRemoved: 'Spelare borttagen',
+    toastScoresApplied: 'Poäng applicerade! ✓',
+    toastAdjusted: 'Poäng justerade!',
+    toastWrongPass: 'Fel lösenord',
+    toastUnlocked: 'Fas upplåst!',
+    toastExported: 'CSV exporterad!',
+    sectionWorld: 'De stora frågorna',
+    sectionGroup: 'Gruppspel',
+    sectionSweden: 'Sverige 🇸🇪',
+    sectionBrazil: 'Brasilien 🇧🇷',
+    sectionHardcore: 'För riktiga fans',
+    stageBannerStatuses: ['Gruppspel ⚽','Omgång 32','Kvartsfinaler','Semifinaler','Final'],
+  },
+  en: {
+    headerTitle: 'WC 2026 — Family League',
+    headerSub: 'Jun 11 – Jul 19 · USA / Canada / Mexico',
+    heroLabel: 'TOTAL POT',
+    heroSub: '100 kr per person · Players registered: ',
+    stat1Label: '1ST PLACE', stat2Label: '2ND PLACE', stat3Label: '3RD PLACE', stat4Label: 'DEADLINE',
+    stageBannerText: 'Stage open:',
+    btnMyTips: 'My predictions →', btnLeaderboard: 'Leaderboard',
+    selectPlayerLabel: 'Select your name:',
+    submittedTitle: '✓ Predictions submitted!', submittedSub: 'Your answers are saved. Good luck!',
+    submitBtn: 'Submit my predictions →',
+    noPlayersText: 'No players added yet. Ask the admin to add players.',
+    lbPotLabel: 'POT', lbSub: 'Next scoring after group stage · Jun 28',
+    adminLoginTitle: 'Admin', adminLoginSub: 'Enter password to continue',
+    adminLoginBtn: 'Login', adminPassInput: 'Password...',
+    adminPlayersTitle: 'Players', addPlayerBtn: '+ Add', newPlayerInput: 'Name...',
+    adminStagesTitle: 'Stages', backBtn: '← Back', scoringTitle: 'Score questions',
+    applyScoresBtn: 'Apply scores ✓', manualAdjustTitle: 'Manual adjustment',
+    adjustBtn: '+', exportBtn: '⬇ Export answers (CSV)', logoutBtn: 'Log out',
+    unlockBtn: 'Unlock', scoreBtn: 'Score', scoredLabel: 'Scored',
+    navHome: 'Home', navTips: 'Tips', navTable: 'Table', navAdmin: 'Admin',
+    langBtn: 'SV',
+    stages: ['Group Stage','Round of 32','Quarter-finals','Semi-finals','Final'],
+    stageDeadlines: ['Deadline: Jun 11','Opens: Jul 1','Opens: Jul 9','Opens: Jul 15','Opens: Jul 19'],
+    correctAnswerPlaceholder: 'Correct answer...',
+    correctYes: 'Yes', correctNo: 'No',
+    ptsLabel: 'pts',
+    answeredOf: 'of',
+    questionsAnswered: 'questions answered',
+    lockedWaveText: 'Locked — opens later',
+    progressLabel: 'questions answered',
+    toastSubmitted: 'Predictions submitted! ✓',
+    toastPlayerAdded: 'Player added!',
+    toastPlayerRemoved: 'Player removed',
+    toastScoresApplied: 'Scores applied! ✓',
+    toastAdjusted: 'Points adjusted!',
+    toastWrongPass: 'Wrong password',
+    toastUnlocked: 'Stage unlocked!',
+    toastExported: 'CSV exported!',
+    sectionWorld: 'The big questions',
+    sectionGroup: 'Group Stage',
+    sectionSweden: 'Sweden 🇸🇪',
+    sectionBrazil: 'Brazil 🇧🇷',
+    sectionHardcore: 'For real fans',
+    stageBannerStatuses: ['Group Stage ⚽','Round of 32','Quarter-finals','Semi-finals','Final'],
+  }
+};
+
+// ─── QUESTIONS ───────────────────────────────────────────────────────────────
+const QUESTIONS = {
+  wave1: [
+    // BIG QUESTIONS
+    { id:'q1', section:'world', type:'text', sv:'Vem vinner hela turneringen?', en:'Who wins the whole tournament?', pts:12 },
+    { id:'q2', section:'world', type:'text', sv:'Vem slutar på 2:a plats?', en:'Who finishes in 2nd place?', pts:7 },
+    { id:'q3', section:'world', type:'text', sv:'Vem tar tredjeplatsen?', en:'Third place?', pts:4 },
+    { id:'q4', section:'world', type:'text', sv:'VM:s skyttekung (spelarnamn)?', en:'WC top scorer (player name)?', pts:6 },
+    { id:'q5', section:'world', type:'yesno', sv:'Ett afrikanskt lag når kvartsfinalerna?', en:'An African team reaches the quarter-finals?', pts:4 },
+    { id:'q6', section:'world', type:'yesno', sv:'Ett asiatiskt lag når kvartsfinalerna?', en:'An Asian team reaches the quarter-finals?', pts:4 },
+    { id:'q7', section:'world', type:'yesno', sv:'Avgörs finalen på straffar?', en:'Will the final be decided by penalties?', pts:5 },
+    // GROUP STAGE
+    { id:'q8', section:'group', type:'text', sv:'Vilket land slutar sist i sin grupp?', en:'Which country finishes last in their group?', pts:3 },
+    { id:'q9', section:'group', type:'yesno', sv:'Går alla tre värdnationer (USA, Kanada och Mexiko) vidare?', en:'Will all three host nations (USA, Canada and Mexico) advance?', pts:4 },
+    { id:'q10', section:'group', type:'number', sv:'Hur många röda kort under hela gruppspelet? (närmaste vinner)', en:'How many red cards in the entire group stage? (closest wins)', pts:4 },
+    { id:'q11', section:'group', type:'text', sv:'Vilket lag avslutar gruppspelet med 3 vinster och 0 insläppta mål?', en:'Which team finishes group stage with 3 wins and 0 goals conceded?', pts:6 },
+    // SWEDEN
+    { id:'q12', section:'sweden', type:'yesno', sv:'Sverige går vidare från gruppen?', en:'Sweden advances from the group?', pts:3 },
+    { id:'q13', section:'sweden', type:'select', options:['1:a','2:a','3:e','Ut'], optionsEn:['1st','2nd','3rd','Out'], sv:'På vilken plats slutar Sverige i gruppen?', en:'Sweden finishes group in what position?', pts:2 },
+    { id:'q14', section:'sweden', type:'yesno', sv:'Är Gyökéres Sveriges skyttekung?', en:'Is Gyökéres Sweden\'s top scorer?', pts:3 },
+    { id:'q15', section:'sweden', type:'text', sv:'Vad blir den virala svenska låten under detta VM?', en:'What will be the viral Swedish song of this World Cup?', pts:3, admin:true },
+    // BRAZIL
+    { id:'q16', section:'brazil', type:'yesno', sv:'Brasilien går vidare från gruppen?', en:'Brazil advances from the group?', pts:2 },
+    { id:'q17', section:'brazil', type:'select', options:['1:a','2:a','3:e','Ut'], optionsEn:['1st','2nd','3rd','Out'], sv:'På vilken plats slutar Brasilien i gruppen?', en:'Brazil finishes group in what position?', pts:2 },
+    { id:'q18', section:'brazil', type:'yesno', sv:'Spelar Neymar alla gruppspelsmatcher?', en:'Will Neymar play all group stage games?', pts:3 },
+    { id:'q19', section:'brazil', type:'text', sv:'Vad blir den virala brasilianska låten under detta VM?', en:'What will be the viral Brazilian song of this World Cup?', pts:3, admin:true },
+  ]
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let state = {
+  lang: 'sv',
+  adminLoggedIn: false,
+  currentPlayer: null,
+  players: [],
+  answers: {},
+  scores: {},
+  submitted: {},
+  stageStatus: { wave1:'open', wave2:'locked', wave3:'locked', wave4:'locked', wave5:'locked' },
+  correctAnswers: {},
+  manualAdjustments: {}
+};
+
+function loadState() {
+  const saved = localStorage.getItem('vm2026_state');
+  if (saved) {
+    try { state = { ...state, ...JSON.parse(saved) }; } catch(e) {}
+  }
+}
+function saveState() {
+  localStorage.setItem('vm2026_state', JSON.stringify(state));
+}
+
+// ─── LANGUAGE ─────────────────────────────────────────────────────────────────
+function t(key) { return TRANSLATIONS[state.lang][key] || key; }
+
+function toggleLang() {
+  state.lang = state.lang === 'sv' ? 'en' : 'sv';
+  saveState();
+  applyTranslations();
+  renderCurrentScreen();
+}
+
+function applyTranslations() {
+  const ids = ['headerTitle','headerSub','heroLabel','stat1Label','stat2Label','stat3Label','stat4Label',
+    'stageBannerText','btnMyTips','btnLeaderboard','selectPlayerLabel','submittedTitle','submittedSub',
+    'submitBtn','lbPotLabel','lbSub','adminLoginTitle','adminLoginSub','adminLoginBtn',
+    'adminPlayersTitle','adminStagesTitle','backBtn','scoringTitle','applyScoresBtn',
+    'manualAdjustTitle','adjustBtn','exportBtn','logoutBtn','langBtn',
+    'navHome','navTips','navTable','navAdmin','addPlayerBtn'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t(id);
+  });
+  const passInput = document.getElementById('adminPassInput');
+  if (passInput) passInput.placeholder = t('adminPassInput');
+  const newPlayerInput = document.getElementById('newPlayerInput');
+  if (newPlayerInput) newPlayerInput.placeholder = t('newPlayerInput');
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+let currentScreen = 'home';
+function goToScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  currentScreen = name;
+  renderScreen(name);
+}
+function renderCurrentScreen() { renderScreen(currentScreen); }
+function renderScreen(name) {
+  if (name === 'home') renderHome();
+  if (name === 'predictions') renderPredictions();
+  if (name === 'leaderboard') renderLeaderboard();
+  if (name === 'admin') renderAdmin();
+}
+
+// ─── HOME ─────────────────────────────────────────────────────────────────────
+function renderHome() {
+  const pot = state.players.length * ENTRY_FEE;
+  document.getElementById('heroPot').textContent = pot.toLocaleString('sv-SE') + ' kr';
+  document.getElementById('heroPlayers').textContent = state.players.length;
+  document.getElementById('heroSub').textContent = t('heroSub') + state.players.length;
+  document.getElementById('stat1Value').textContent = Math.round(pot * 0.6).toLocaleString('sv-SE') + ' kr';
+  document.getElementById('stat2Value').textContent = Math.round(pot * 0.3).toLocaleString('sv-SE') + ' kr';
+  document.getElementById('stat3Value').textContent = Math.round(pot * 0.1).toLocaleString('sv-SE') + ' kr';
+  const openStageIdx = ['wave1','wave2','wave3','wave4','wave5'].findIndex(w => state.stageStatus[w] === 'open');
+  const idx = openStageIdx === -1 ? 0 : openStageIdx;
+  document.getElementById('stageBannerStatus').textContent = t('stageBannerStatuses')[idx];
+  applyTranslations();
+}
+
+// ─── PREDICTIONS ─────────────────────────────────────────────────────────────
+function renderPredictions() {
+  const selector = document.getElementById('playerSelector');
+  const content = document.getElementById('predictionsContent');
+  const noMsg = document.getElementById('noPlayersMsg');
+  selector.innerHTML = '';
+
+  if (state.players.length === 0) {
+    document.getElementById('playerSelectorWrap').style.display = 'none';
+    noMsg.style.display = 'block';
+    content.style.display = 'none';
+    return;
+  }
+  noMsg.style.display = 'none';
+  document.getElementById('playerSelectorWrap').style.display = 'block';
+  document.getElementById('selectPlayerLabel').textContent = t('selectPlayerLabel');
+
+  state.players.forEach((p, i) => {
+    const colors = AVATAR_COLORS[i % AVATAR_COLORS.length];
+    const initials = p.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    const chip = document.createElement('div');
+    chip.className = 'player-chip' + (state.currentPlayer === p ? ' selected' : '');
+    chip.innerHTML = `<div class="avatar-initials" style="background:${colors[0]};color:${colors[1]}">${initials}</div>${p}`;
+    chip.onclick = () => selectPlayer(p);
+    selector.appendChild(chip);
+  });
+
+  if (state.currentPlayer) {
+    content.style.display = 'block';
+    renderQuestions();
+  } else {
+    content.style.display = 'none';
+  }
+}
+
+function selectPlayer(name) {
+  state.currentPlayer = name;
+  renderPredictions();
+}
+
+function renderQuestions() {
+  const wrap = document.getElementById('questionsWrap');
+  const submitted = state.submitted[state.currentPlayer];
+  const banner = document.getElementById('submittedBanner');
+  const submitWrap = document.getElementById('submitWrap');
+
+  document.getElementById('submittedTitle').textContent = t('submittedTitle');
+  document.getElementById('submittedSub').textContent = t('submittedSub');
+  document.getElementById('submitBtn').textContent = t('submitBtn');
+
+  if (submitted) {
+    banner.style.display = 'block';
+    submitWrap.style.display = 'none';
+  } else {
+    banner.style.display = 'none';
+    submitWrap.style.display = 'block';
+  }
+
+  const allQs = QUESTIONS.wave1;
+  const answered = allQs.filter(q => {
+    const a = (state.answers[state.currentPlayer] || {})[q.id];
+    return a !== undefined && a !== '' && a !== null;
+  }).length;
+
+  // Progress
+  wrap.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>${answered} ${t('answeredOf')} ${allQs.length} ${t('progressLabel')}</span>
+        <span>${Math.round(answered/allQs.length*100)}%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${Math.round(answered/allQs.length*100)}%"></div></div>
+    </div>
+  `;
+
+  const sections = [
+    { key:'world', label: t('sectionWorld'), badge:'badge-world' },
+    { key:'group', label: t('sectionGroup'), badge:'badge-world' },
+    { key:'sweden', label: t('sectionSweden'), badge:'badge-sweden' },
+    { key:'brazil', label: t('sectionBrazil'), badge:'badge-brazil' },
+  ];
+
+  sections.forEach(sec => {
+    const qs = allQs.filter(q => q.section === sec.key);
+    if (!qs.length) return;
+    wrap.innerHTML += `<div class="section-header"><span class="section-badge ${sec.badge}">${sec.label}</span></div>`;
+    qs.forEach(q => {
+      wrap.innerHTML += buildQuestionCard(q, submitted);
+    });
+  });
+
+  // Wave 2+ locked
+  ['wave2','wave3','wave4','wave5'].forEach((w, i) => {
+    const labels = t('stages');
+    if (state.stageStatus[w] === 'locked') {
+      wrap.innerHTML += `<div class="section-header"><span class="section-badge badge-locked">${labels[i+1]}</span></div>
+      <div class="wave-locked-banner">🔒 ${t('lockedWaveText')}</div>`;
+    }
+  });
+}
+
+function buildQuestionCard(q, locked) {
+  const answers = state.answers[state.currentPlayer] || {};
+  const val = answers[q.id];
+  const isAnswered = val !== undefined && val !== '' && val !== null;
+  const qText = state.lang === 'sv' ? q.sv : q.en;
+  const adminNote = q.admin ? (state.lang === 'sv' ? ' · admin bedömer' : ' · admin judges') : '';
+  let inputHtml = '';
+
+  if (q.type === 'text') {
+    inputHtml = `<input class="q-input" type="text" placeholder="${state.lang==='sv'?'Skriv svar...':'Type answer...'}" 
+      value="${val||''}" ${locked?'disabled':''} 
+      onchange="saveAnswer('${q.id}', this.value)" oninput="saveAnswer('${q.id}', this.value)" />`;
+  } else if (q.type === 'yesno') {
+    const yesLabel = state.lang === 'sv' ? 'Ja' : 'Yes';
+    const noLabel = state.lang === 'sv' ? 'Nej' : 'No';
+    inputHtml = `<div class="toggle-row">
+      <button class="toggle-btn ${val==='yes'?'active-yes':''}" ${locked?'disabled':''} onclick="saveAnswer('${q.id}','yes');renderQuestions()">${yesLabel}</button>
+      <button class="toggle-btn ${val==='no'?'active-no':''}" ${locked?'disabled':''} onclick="saveAnswer('${q.id}','no');renderQuestions()">${noLabel}</button>
+    </div>`;
+  } else if (q.type === 'select') {
+    const opts = state.lang === 'sv' ? q.options : q.optionsEn;
+    inputHtml = `<div class="select-row">` + opts.map((o,i) => {
+      const optVal = q.options[i];
+      return `<button class="select-btn ${val===optVal?'active':''}" ${locked?'disabled':''} onclick="saveAnswer('${q.id}','${optVal}');renderQuestions()">${o}</button>`;
+    }).join('') + `</div>`;
+  } else if (q.type === 'number') {
+    const num = val !== undefined ? val : 0;
+    inputHtml = `<div class="number-input-row">
+      <button class="number-btn" ${locked?'disabled':''} onclick="adjustNumber('${q.id}',-1)">−</button>
+      <div class="number-display" id="num_${q.id}">${num}</div>
+      <button class="number-btn" ${locked?'disabled':''} onclick="adjustNumber('${q.id}',1)">+</button>
+    </div>`;
+  }
+
+  return `<div class="q-card ${locked?'locked':''} ${isAnswered?'answered':''}">
+    <div class="q-label">${qText}</div>
+    <div class="q-pts">+${q.pts} ${t('ptsLabel')}${adminNote}</div>
+    ${inputHtml}
+  </div>`;
+}
+
+function saveAnswer(qId, value) {
+  if (!state.currentPlayer) return;
+  if (state.submitted[state.currentPlayer]) return;
+  if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
+  state.answers[state.currentPlayer][qId] = value;
+  saveState();
+  // refresh progress only
+  const allQs = QUESTIONS.wave1;
+  const answered = allQs.filter(q => {
+    const a = (state.answers[state.currentPlayer] || {})[q.id];
+    return a !== undefined && a !== '' && a !== null;
+  }).length;
+  const pct = Math.round(answered/allQs.length*100);
+  const fill = document.querySelector('.progress-fill');
+  if (fill) fill.style.width = pct + '%';
+  const labels = document.querySelectorAll('.progress-label span');
+  if (labels.length >= 2) {
+    labels[0].textContent = `${answered} ${t('answeredOf')} ${allQs.length} ${t('progressLabel')}`;
+    labels[1].textContent = pct + '%';
+  }
+}
+
+function adjustNumber(qId, delta) {
+  if (!state.currentPlayer || state.submitted[state.currentPlayer]) return;
+  if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
+  const cur = state.answers[state.currentPlayer][qId] || 0;
+  const next = Math.max(0, cur + delta);
+  state.answers[state.currentPlayer][qId] = next;
+  const el = document.getElementById('num_' + qId);
+  if (el) el.textContent = next;
+  saveState();
+}
+
+function submitAnswers() {
+  if (!state.currentPlayer) return;
+  state.submitted[state.currentPlayer] = new Date().toISOString();
+  saveState();
+  showToast(t('toastSubmitted'));
+  renderQuestions();
+}
+
+// ─── LEADERBOARD ─────────────────────────────────────────────────────────────
+function renderLeaderboard() {
+  const pot = state.players.length * ENTRY_FEE;
+  document.getElementById('lbPot').textContent = pot.toLocaleString('sv-SE') + ' kr';
+  document.getElementById('lb1st').textContent = Math.round(pot*0.6).toLocaleString('sv-SE') + ' kr';
+  document.getElementById('lb2nd').textContent = Math.round(pot*0.3).toLocaleString('sv-SE') + ' kr';
+  document.getElementById('lb3rd').textContent = Math.round(pot*0.1).toLocaleString('sv-SE') + ' kr';
+  document.getElementById('lbSub').textContent = t('lbSub');
+
+  const sorted = [...state.players].sort((a,b) => (state.scores[b]||0) - (state.scores[a]||0));
+  const list = document.getElementById('leaderboardList');
+  list.innerHTML = '';
+
+  if (sorted.length === 0) {
+    list.innerHTML = `<p style="text-align:center;color:var(--muted);font-size:13px;padding:30px 0">${state.lang==='sv'?'Inga spelare ännu':'No players yet'}</p>`;
+    return;
+  }
+
+  sorted.forEach((p, i) => {
+    const colors = AVATAR_COLORS[state.players.indexOf(p) % AVATAR_COLORS.length];
+    const initials = p.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const medals = ['🥇','🥈','🥉'];
+    const posClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+    const isCurrent = p === state.currentPlayer;
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (isCurrent ? ' current-player' : '');
+    row.innerHTML = `
+      <div class="lb-pos ${posClass}">${i < 3 ? medals[i] : i+1}</div>
+      <div class="lb-avatar" style="background:${colors[0]};color:${colors[1]}">${initials}</div>
+      <div class="lb-name">${p}</div>
+      <div class="lb-pts">${state.scores[p]||0} ${t('ptsLabel')}</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+// ─── ADMIN ────────────────────────────────────────────────────────────────────
+function renderAdmin() {
+  applyTranslations();
+  if (!state.adminLoggedIn) {
+    document.getElementById('adminLogin').style.display = 'block';
+    document.getElementById('adminPanel').style.display = 'none';
+    return;
+  }
+  document.getElementById('adminLogin').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  renderPlayerList();
+  renderStageList();
+  renderAdjustSelect();
+}
+
+function checkAdminPass() {
+  const input = document.getElementById('adminPassInput').value;
+  if (input === ADMIN_PASS) {
+    state.adminLoggedIn = true;
+    renderAdmin();
+  } else {
+    showToast(t('toastWrongPass'));
+  }
+}
+function adminLogout() { state.adminLoggedIn = false; renderAdmin(); }
+
+function addPlayer() {
+  const input = document.getElementById('newPlayerInput');
+  const name = input.value.trim();
+  if (!name || state.players.includes(name)) return;
+  state.players.push(name);
+  state.scores[name] = 0;
+  input.value = '';
+  saveState();
+  showToast(t('toastPlayerAdded'));
+  renderPlayerList();
+  renderAdjustSelect();
+  renderHome();
+}
+
+function removePlayer(name) {
+  state.players = state.players.filter(p => p !== name);
+  delete state.answers[name];
+  delete state.scores[name];
+  delete state.submitted[name];
+  if (state.currentPlayer === name) state.currentPlayer = null;
+  saveState();
+  showToast(t('toastPlayerRemoved'));
+  renderPlayerList();
+  renderAdjustSelect();
+  renderHome();
+}
+
+function renderPlayerList() {
+  const list = document.getElementById('playerListAdmin');
+  list.innerHTML = '';
+  state.players.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'player-admin-row';
+    const sub = state.submitted[p] ? (state.lang==='sv'?'✓ Inlämnad':'✓ Submitted') : (state.lang==='sv'?'Ej inlämnad':'Not submitted');
+    row.innerHTML = `<span>${p} <span style="font-size:11px;color:var(--muted)">· ${sub}</span></span>
+      <button class="delete-btn" onclick="removePlayer('${p}')">✕</button>`;
+    list.appendChild(row);
+  });
+}
+
+function renderStageList() {
+  const list = document.getElementById('stageList');
+  list.innerHTML = '';
+  const stages = ['wave1','wave2','wave3','wave4','wave5'];
+  stages.forEach((w, i) => {
+    const status = state.stageStatus[w];
+    const label = t('stages')[i];
+    const deadline = t('stageDeadlines')[i];
+    const row = document.createElement('div');
+    row.className = 'admin-stage-row';
+    let actions = '';
+    if (status === 'locked') {
+      actions = `<button class="btn btn-primary btn-sm" onclick="unlockStage('${w}')">${t('unlockBtn')}</button>`;
+    } else if (status === 'open') {
+      actions = `<span class="badge-status badge-open">${state.lang==='sv'?'Öppen':'Open'}</span>
+        <button class="btn btn-secondary btn-sm" onclick="openScoringPanel('${w}')">${t('scoreBtn')}</button>`;
+    } else {
+      actions = `<span class="badge-status badge-scored">${t('scoredLabel')}</span>
+        <button class="btn btn-secondary btn-sm" onclick="openScoringPanel('${w}')">${t('scoreBtn')}</button>`;
+    }
+    row.innerHTML = `<div><div class="admin-stage-name">${label}</div><div style="font-size:11px;color:var(--muted)">${deadline}</div></div>
+      <div class="admin-stage-actions">${actions}</div>`;
+    list.appendChild(row);
+  });
+}
+
+function unlockStage(wave) {
+  state.stageStatus[wave] = 'open';
+  saveState();
+  showToast(t('toastUnlocked'));
+  renderStageList();
+}
+
+let scoringWave = null;
+function openScoringPanel(wave) {
+  scoringWave = wave;
+  document.getElementById('scoringPanel').style.display = 'block';
+  document.getElementById('manualAdjust').style.display = 'none';
+  document.getElementById('stageList').style.display = 'none';
+  document.getElementById('scoringTitle').textContent = t('scoringTitle');
+  document.getElementById('backBtn').textContent = t('backBtn');
+  document.getElementById('applyScoresBtn').textContent = t('applyScoresBtn');
+  renderScoringQuestions(wave);
+}
+function closeScoringPanel() {
+  document.getElementById('scoringPanel').style.display = 'none';
+  document.getElementById('manualAdjust').style.display = 'block';
+  document.getElementById('stageList').style.display = 'block';
+  scoringWave = null;
+}
+
+function renderScoringQuestions(wave) {
+  const qs = QUESTIONS[wave] || [];
+  const wrap = document.getElementById('scoringQuestions');
+  wrap.innerHTML = '';
+  qs.forEach(q => {
+    const qText = state.lang === 'sv' ? q.sv : q.en;
+    const correct = state.correctAnswers[q.id] || '';
+    let answerRows = state.players.map(p => {
+      const a = (state.answers[p] || {})[q.id];
+      let display = a !== undefined ? a : '—';
+      if (display === 'yes') display = state.lang==='sv'?'Ja':'Yes';
+      if (display === 'no') display = state.lang==='sv'?'Nej':'No';
+      return `<div class="answer-row"><span class="answer-player">${p}</span><span class="answer-value">${display}</span></div>`;
+    }).join('');
+
+    let correctInput = '';
+    if (q.type === 'yesno') {
+      const yLabel = state.lang==='sv'?'Ja':'Yes';
+      const nLabel = state.lang==='sv'?'Nej':'No';
+      correctInput = `<div class="correct-input-row">
+        <span class="correct-label">${state.lang==='sv'?'Rätt svar:':'Correct answer:'}</span>
+        <button class="toggle-btn ${correct==='yes'?'active-yes':''}" onclick="setCorrect('${q.id}','yes');renderScoringQuestions('${wave}')">${yLabel}</button>
+        <button class="toggle-btn ${correct==='no'?'active-no':''}" onclick="setCorrect('${q.id}','no');renderScoringQuestions('${wave}')">${nLabel}</button>
+      </div>`;
+    } else if (q.type === 'select') {
+      const opts = state.lang === 'sv' ? q.options : q.optionsEn;
+      correctInput = `<div class="correct-input-row">
+        <span class="correct-label">${state.lang==='sv'?'Rätt svar:':'Correct answer:'}</span>
+        <div class="select-row">${opts.map((o,i)=>`<button class="select-btn ${correct===q.options[i]?'active':''}" onclick="setCorrect('${q.id}','${q.options[i]}');renderScoringQuestions('${wave}')">${o}</button>`).join('')}</div>
+      </div>`;
+    } else {
+      correctInput = `<div class="correct-input-row">
+        <span class="correct-label">${state.lang==='sv'?'Rätt svar:':'Correct answer:'}</span>
+        <input class="q-input" style="flex:1" type="${q.type==='number'?'number':'text'}" 
+          placeholder="${t('correctAnswerPlaceholder')}" value="${correct}"
+          oninput="setCorrect('${q.id}',this.value)" />
+      </div>`;
+    }
+
+    const div = document.createElement('div');
+    div.className = 'scoring-q';
+    div.innerHTML = `<div class="scoring-q-label">${qText} (+${q.pts} ${t('ptsLabel')})</div>
+      <div class="answers-grid">${answerRows}</div>${correctInput}`;
+    wrap.appendChild(div);
+  });
+}
+
+function setCorrect(qId, value) {
+  state.correctAnswers[qId] = value;
+  saveState();
+}
+
+function applyScores() {
+  if (!scoringWave) return;
+  const qs = QUESTIONS[scoringWave] || [];
+  qs.forEach(q => {
+    const correct = state.correctAnswers[q.id];
+    if (correct === undefined || correct === '') return;
+    state.players.forEach(p => {
+      const ans = (state.answers[p] || {})[q.id];
+      if (ans === undefined) return;
+      if (q.type === 'number') {
+        // closest wins — find best first
+        return;
+      } else {
+        const match = String(ans).trim().toLowerCase() === String(correct).trim().toLowerCase();
+        if (match) {
+          state.scores[p] = (state.scores[p] || 0) + q.pts;
+        }
+      }
+    });
+  });
+  // Handle number questions (closest wins)
+  qs.filter(q => q.type === 'number').forEach(q => {
+    const correct = parseInt(state.correctAnswers[q.id]);
+    if (isNaN(correct)) return;
+    let minDiff = Infinity;
+    state.players.forEach(p => {
+      const ans = parseInt((state.answers[p] || {})[q.id]) || 0;
+      const diff = Math.abs(ans - correct);
+      if (diff < minDiff) minDiff = diff;
+    });
+    state.players.forEach(p => {
+      const ans = parseInt((state.answers[p] || {})[q.id]) || 0;
+      const diff = Math.abs(ans - correct);
+      if (diff === minDiff) state.scores[p] = (state.scores[p] || 0) + q.pts;
+    });
+  });
+  state.stageStatus[scoringWave] = 'scored';
+  saveState();
+  showToast(t('toastScoresApplied'));
+  closeScoringPanel();
+  renderStageList();
+}
+
+function renderAdjustSelect() {
+  const sel = document.getElementById('adjustPlayer');
+  sel.innerHTML = state.players.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+function applyManualAdjust() {
+  const player = document.getElementById('adjustPlayer').value;
+  const pts = parseInt(document.getElementById('adjustPoints').value) || 0;
+  if (!player) return;
+  state.scores[player] = (state.scores[player] || 0) + pts;
+  document.getElementById('adjustPoints').value = '';
+  saveState();
+  showToast(t('toastAdjusted'));
+}
+
+// ─── CSV EXPORT ───────────────────────────────────────────────────────────────
+function exportCSV() {
+  const allQs = QUESTIONS.wave1;
+  const headers = ['Player','Submitted',...allQs.map(q=>q.en),'Total Points'];
+  const rows = state.players.map(p => {
+    const submitted = state.submitted[p] ? new Date(state.submitted[p]).toLocaleString() : 'No';
+    const answers = allQs.map(q => {
+      let a = (state.answers[p]||{})[q.id];
+      if (a === 'yes') a = 'Yes';
+      if (a === 'no') a = 'No';
+      return a !== undefined ? String(a) : '';
+    });
+    return [p, submitted, ...answers, state.scores[p]||0];
+  });
+  const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'vm2026_answers.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(t('toastExported'));
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadState();
+applyTranslations();
+renderHome();
+</script>
+</body>
+</html>
