@@ -1184,13 +1184,21 @@ function renderAdmin() {
   renderAdjustSelect();
 }
 
-function checkAdminPass() {
-  const input = document.getElementById('adminPassInput').value;
-  if (input === ADMIN_PASS) {
+function verifyAdmin() {
+  const passInput = document.getElementById('admin-pass-input');
+  if (!passInput) return;
+  
+  const input = passInput.value;
+  
+  if (input === "VM2026admin") {
     state.adminLoggedIn = true;
     renderAdmin();
   } else {
-    showToast(t('toastWrongPass'));
+    if (typeof t === 'function') {
+      showToast(t('toastWrongPass'));
+    } else {
+      alert("Incorrect Password!");
+    }
   }
 }
 function adminLogout() { state.adminLoggedIn = false; renderAdmin(); }
