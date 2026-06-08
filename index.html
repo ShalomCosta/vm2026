@@ -840,32 +840,40 @@ const TRANSLATIONS = {
 };
 
 // ─── QUESTIONS ───────────────────────────────────────────────────────────────
+// ─── QUESTIONS ───────────────────────────────────────────────────────────────
 const QUESTIONS = {
   wave1: [
-    // BIG QUESTIONS
-    { id:'q1', section:'world', type:'text', sv:'Vem vinner hela turneringen?', en:'Who wins the whole tournament?', pts:12 },
-    { id:'q2', section:'world', type:'text', sv:'Vem slutar på 2:a plats?', en:'Who finishes in 2nd place?', pts:7 },
-    { id:'q3', section:'world', type:'text', sv:'Vem tar tredjeplatsen?', en:'Third place?', pts:4 },
-    { id:'q4', section:'world', type:'text', sv:'VM:s skyttekung (spelarnamn)?', en:'WC top scorer (player name)?', pts:6 },
-    { id:'q5', section:'world', type:'yesno', sv:'Ett afrikanskt lag når kvartsfinalerna?', en:'An African team reaches the quarter-finals?', pts:4 },
-    { id:'q6', section:'world', type:'yesno', sv:'Ett asiatiskt lag når kvartsfinalerna?', en:'An Asian team reaches the quarter-finals?', pts:4 },
-    { id:'q7', section:'world', type:'yesno', sv:'Avgörs finalen på straffar?', en:'Will the final be decided by penalties?', pts:5 },
-    // GROUP STAGE
-    { id:'q8', section:'group', type:'text', sv:'Vilket land slutar sist i sin grupp?', en:'Which country finishes last in their group?', pts:3 },
-    { id:'q9', section:'group', type:'yesno', sv:'Går alla tre värdnationer (USA, Kanada och Mexiko) vidare?', en:'Will all three host nations (USA, Canada and Mexico) advance?', pts:4 },
-    { id:'q10', section:'group', type:'number', sv:'Hur många röda kort under hela gruppspelet? (närmaste vinner)', en:'How many red cards in the entire group stage? (closest wins)', pts:4 },
-    { id:'q11', section:'group', type:'text', sv:'Vilket lag avslutar gruppspelet med 3 vinster och 0 insläppta mål?', en:'Which team finishes group stage with 3 wins and 0 goals conceded?', pts:6 },
-    // SWEDEN
-    { id:'q12', section:'sweden', type:'yesno', sv:'Sverige går vidare från gruppen?', en:'Sweden advances from the group?', pts:3 },
-    { id:'q13', section:'sweden', type:'select', options:['1:a','2:a','3:e','Ut'], optionsEn:['1st','2nd','3rd','Out'], sv:'På vilken plats slutar Sverige i gruppen?', en:'Sweden finishes group in what position?', pts:2 },
-    { id:'q14', section:'sweden', type:'yesno', sv:'Är Gyökéres Sveriges skyttekung?', en:'Is Gyökéres Sweden\'s top scorer?', pts:3 },
-    { id:'q15', section:'sweden', type:'text', sv:'Vad blir den virala svenska låten under detta VM?', en:'What will be the viral Swedish song of this World Cup?', pts:3, admin:true },
-    // BRAZIL
-    { id:'q16', section:'brazil', type:'yesno', sv:'Brasilien går vidare från gruppen?', en:'Brazil advances from the group?', pts:2 },
-    { id:'q17', section:'brazil', type:'select', options:['1:a','2:a','3:e','Ut'], optionsEn:['1st','2nd','3rd','Out'], sv:'På vilken plats slutar Brasilien i gruppen?', en:'Brazil finishes group in what position?', pts:2 },
-    { id:'q18', section:'brazil', type:'yesno', sv:'Spelar Neymar alla gruppspelsmatcher?', en:'Will Neymar play all group stage games?', pts:3 },
-    { id:'q19', section:'brazil', type:'text', sv:'Vad blir den virala brasilianska låten under detta VM?', en:'What will be the viral Brazilian song of this World Cup?', pts:3, admin:true },
-  ]
+    // THE BIG QUESTIONS
+    { id: 'q1', section: 'world', type: 'text', sv: 'Vem vinner hela turneringen?', en: 'Who wins the whole tournament?', pts: 12 },
+    { id: 'q2', section: 'world', type: 'text', sv: 'Vem slutar på 2:a plats?', en: 'Who finishes in 2nd place?', pts: 7 },
+    { id: 'q3', section: 'world', type: 'text', sv: 'Vem tar tredjeplatsen?', en: 'Third place?', pts: 4 },
+    { id: 'q4', section: 'world', type: 'text', sv: 'VM:s skyttekung (spelarnamn)?', en: 'WC top scorer (player name)?', pts: 6 },
+    { id: 'q5', section: 'world', type: 'yesno', sv: 'Ett afrikanskt lag når kvartsfinalerna?', en: 'An African team reaches the quarter-finals?', pts: 4 },
+    { id: 'q6', section: 'world', type: 'yesno', sv: 'Ett asiatiskt lag når kvartsfinalerna?', en: 'An Asian team reaches the quarter-finals?', pts: 4 },
+    { id: 'q7', section: 'world', type: 'yesno', sv: 'Avgörs finalen på straffar?', en: 'Will the final be decided by penalties?', pts: 5 },
+    { id: 'q15', section: 'world', type: 'text', sv: 'Vad blir den virala svenska låten under detta VM?', en: 'What will be the viral Swedish song of this World Cup?', pts: 3 },
+    { id: 'q19', section: 'world', type: 'text', sv: 'Vad blir den virala brasilianska låten under detta VM?', en: 'What will be the viral Brazilian song of this World Cup?', pts: 3 },
+    
+    // GROUP STAGE - PART 1
+    { id: 'q8', section: 'group', type: 'text', sv: 'Vilket land slutar sist i sin grupp?', en: 'Which country finishes last in their group?', pts: 3 },
+    { id: 'q9', section: 'group', type: 'yesno', sv: 'Går alla tre värdnationer (USA, Kanada och Mexiko) vidare från gruppspelet?', en: 'Will all three host nations (USA, Canada and Mexico) advance from the group stage?', pts: 4 },
+    { id: 'q10', section: 'group', type: 'number', sv: 'Hur många röda kort under hela gruppspelet? (närmaste vinner)', en: 'How many red cards in the entire group stage? (closest number wins)', pts: 4 },
+    { id: 'q11', section: 'group', type: 'text', sv: 'Vilket lag avslutar gruppspelet med 3 vinster och 0 insläppta mål?', en: 'Which team finishes the group stage with 3 wins and 0 goals conceded?', pts: 6 },
+
+    // SWEDEN (Group F: Netherlands, Japan, Tunisia)
+    { id: 'q12', section: 'sweden', type: 'yesno', sv: 'Går Sverige vidare från gruppen?', en: 'Sweden advances from the group?', pts: 3 },
+    { id: 'q13', section: 'sweden', type: 'select', options: ['1:a', '2:a', '3:a', 'Utslagna'], optionsEn: ['1st', '2nd', '3rd', 'Out'], sv: 'Vilken placering slutar Sverige på i gruppen?', en: 'Sweden finishes group in what position?', pts: 2 },
+    { id: 'q14', section: 'sweden', type: 'yesno', sv: 'Blir Gyökéres Sveriges bästa målskytt?', en: "Gyökéres is Sweden's top scorer?", pts: 3 },
+
+    // BRAZIL (Group C: Morocco, Haiti, Scotland)
+    { id: 'q16', section: 'brazil', type: 'yesno', sv: 'Går Brasilien vidare från gruppen?', en: 'Brazil advances from the group?', pts: 2 },
+    { id: 'q17', section: 'brazil', type: 'select', options: ['1:a', '2:a', '3:a', 'Utslagna'], optionsEn: ['1st', '2nd', '3rd', 'Out'], sv: 'Vilken placering slutar Brasilien på i gruppen?', en: 'Brazil finishes the group in what position?', pts: 2 },
+    { id: 'q18', section: 'brazil', type: 'yesno', sv: 'Kommer Neymar att spela alla gruppspelsmatcher?', en: 'Will Neymar play all group stage games?', pts: 3 }
+  ],
+  wave2: [], // Future Knockout phase updates go here
+  wave3: [],
+  wave4: [],
+  wave5: []
 };
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
