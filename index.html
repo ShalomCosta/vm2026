@@ -1583,9 +1583,39 @@ function showToast(msg) {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-loadState();
-applyTranslations();
-renderHome();
+async function initApp() {
+  loadState();
+
+  const { data: players, error } = await _supabase
+    .from('players')
+    .select('id, name, points')
+    .order('points', { ascending: false });
+
+  if (!error && players) {
+    state.players = players.map(p => p.name);
+    players.forEach(p => {
+      state.scores[p.name] = p.points || 0;
+    });
+  }
+
+  const { data: preds } = await _supabase
+    .from('predictions')
+    .select('player_id, answers, locked')
+    .eq('locked', true);
+
+  if (preds) {
+    preds.forEach(row => {
+      state.submitted[row.player_id] = state.submitted[row.player_id] || true;
+      state.answers[row.player_id] = row.answers;
+    });
+  }
+
+  saveState();
+  applyTranslations();
+  renderHome();
+}
+
+initApp();
 </script>
 </body>
 </html>
