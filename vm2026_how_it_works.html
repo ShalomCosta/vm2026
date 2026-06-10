@@ -1,0 +1,219 @@
+
+<!-- saved from url=(0060)file:///C:/Users/Shalom/Downloads/vm2026_how_it_works_1.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+.explainer{font-family:'DM Sans',sans-serif;background:#1a1a2e;border-radius:16px;overflow:hidden;max-width:380px;margin:0 auto;color:white}
+.exp-header{padding:20px;text-align:center;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.exp-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;color:white;margin-bottom:2px}
+.exp-sub{font-size:12px;color:rgba(255,255,255,0.4)}
+.exp-section{padding:16px 20px;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.exp-section-title{font-size:10px;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:12px}
+.step-row{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#e8c96a;line-height:1;flex-shrink:0;width:20px;text-align:right}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:500;color:white;margin-bottom:1px}
+.step-desc{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.4}
+.screen-mockup{background:#0d1117;border-radius:10px;overflow:hidden;border:0.5px solid rgba(255,255,255,0.1);margin-bottom:10px}
+.mock-header{background:#1a1a2e;padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
+.mock-header-title{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.5px;color:white}
+.mock-header-sub{font-size:10px;color:rgba(255,255,255,0.4)}
+.mock-body{padding:10px 12px}
+.mock-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.mock-stat{background:rgba(255,255,255,0.05);border-radius:6px;padding:6px 8px}
+.mock-stat-label{font-size:9px;color:rgba(255,255,255,0.35);margin-bottom:1px}
+.mock-stat-val{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#e8c96a}
+.mock-btn{background:#e8c96a;color:#1a1a2e;border-radius:6px;padding:7px;text-align:center;font-size:11px;font-weight:600;margin-bottom:5px}
+.mock-btn-sec{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.7);border-radius:6px;padding:7px;text-align:center;font-size:11px;margin-bottom:8px}
+.mock-nav{display:flex;border-top:0.5px solid rgba(255,255,255,0.08);padding:6px 0 0}
+.mock-nav-item{flex:1;text-align:center;font-size:9px;color:rgba(255,255,255,0.3);padding:3px 0}
+.mock-nav-item.active{color:#e8c96a;background:rgba(232,201,106,0.08);border-radius:4px}
+.mock-q{background:rgba(255,255,255,0.04);border-radius:6px;padding:7px 10px;margin-bottom:5px;border:0.5px solid rgba(255,255,255,0.07)}
+.mock-q-text{font-size:10px;color:rgba(255,255,255,0.8);margin-bottom:4px}
+.mock-q-pts{font-size:9px;color:rgba(255,255,255,0.3);margin-bottom:5px}
+.mock-toggle{display:flex;gap:4px}
+.mock-toggle-btn{flex:1;padding:4px;border-radius:4px;font-size:9px;text-align:center;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5)}
+.mock-toggle-btn.yes{background:rgba(46,204,113,0.15);color:#2ecc71}
+.mock-q-locked{opacity:0.3}
+.mock-lb-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);font-size:11px}
+.mock-lb-medal{font-size:12px;width:18px}
+.mock-lb-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;flex-shrink:0}
+.mock-lb-name{flex:1;color:rgba(255,255,255,0.8)}
+.mock-lb-pts{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#e8c96a}
+.progress-bar{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:8px}
+.progress-fill{height:3px;background:#e8c96a;border-radius:2px;width:55%}
+.wave-tag{display:inline-block;font-size:9px;padding:2px 6px;border-radius:10px;background:rgba(232,201,106,0.15);color:#e8c96a;margin-bottom:6px}
+.timeline-section{padding:16px 20px}
+.timeline-title{font-size:10px;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,0.35);text-transform:uppercase;margin-bottom:14px}
+.tl-row{display:flex;gap:12px;margin-bottom:4px;position:relative}
+.tl-line-wrap{display:flex;flex-direction:column;align-items:center;width:20px;flex-shrink:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:#e8c96a;flex-shrink:0;margin-top:4px}
+.tl-dot.locked{background:rgba(255,255,255,0.15)}
+.tl-connector{width:1px;background:rgba(255,255,255,0.1);flex:1;min-height:20px}
+.tl-body{flex:1;padding-bottom:14px}
+.tl-date{font-size:11px;color:#e8c96a;font-weight:500;margin-bottom:1px}
+.tl-stage{font-size:13px;font-weight:500;color:white;margin-bottom:1px}
+.tl-desc{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.4}
+.tl-badge{display:inline-block;font-size:9px;padding:2px 7px;border-radius:10px;margin-top:4px;font-weight:500}
+.tl-badge-open{background:rgba(46,204,113,0.15);color:#2ecc71}
+.tl-badge-locked{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.35)}
+</style>
+</head><body><h2 class="sr-only">Hur appen funkar — guide och deadlines</h2>
+<div class="explainer">
+  <div class="exp-header">
+    <div class="exp-title">Hur appen funkar</div>
+    <div class="exp-sub">En snabb guide till vm2026costa.casa</div>
+  </div>
+
+  <div class="exp-section">
+    <div class="exp-section-title">Steg för steg</div>
+
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Öppna appen &amp; välj ditt namn</div>
+        <div class="step-desc">Gå till vm2026costa.casa — tryck på Tips och välj ditt namn från listan.</div>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="mock-header"><span class="mock-header-title">VM 2026 — Familjeligan</span><span style="font-size:9px;color:rgba(255,255,255,0.3)">EN</span></div>
+      <div class="mock-body">
+        <div class="mock-stat-row">
+          <div class="mock-stat"><div class="mock-stat-label">POTT</div><div class="mock-stat-val">1 000 kr</div></div>
+          <div class="mock-stat"><div class="mock-stat-label">1:A PLATS</div><div class="mock-stat-val">600 kr</div></div>
+        </div>
+        <div class="mock-btn">Mina tips →</div>
+        <div class="mock-btn-sec">Tabellen</div>
+        <div class="mock-nav">
+          <div class="mock-nav-item active">Hem</div>
+          <div class="mock-nav-item">Tips</div>
+          <div class="mock-nav-item">Tabell</div>
+          <div class="mock-nav-item">Admin</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Svara på Omgång 1 frågorna</div>
+        <div class="step-desc">19 frågor om turneringen, Sverige och Brasilien. Svara på alla innan 11 juni.</div>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="mock-header"><span class="mock-header-title">Mina tips</span><span class="mock-header-sub">Anna · 10 av 19 besvarade</span></div>
+      <div class="mock-body">
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+        <div class="wave-tag">Omgång 1 — Öppen</div>
+        <div class="mock-q">
+          <div class="mock-q-text">Vem vinner hela turneringen?</div>
+          <div class="mock-q-pts">+12 poäng · fritext</div>
+          <div style="background:rgba(255,255,255,0.06);border-radius:4px;padding:4px 6px;font-size:10px;color:rgba(255,255,255,0.6)">Brasilien</div>
+        </div>
+        <div class="mock-q">
+          <div class="mock-q-text">Sverige går vidare från gruppen?</div>
+          <div class="mock-q-pts">+3 poäng · Ja/Nej</div>
+          <div class="mock-toggle"><div class="mock-toggle-btn yes">Ja ✓</div><div class="mock-toggle-btn">Nej</div></div>
+        </div>
+        <div class="mock-q mock-q-locked">
+          <div class="mock-q-text">🔒 Omgång 2 — låst</div>
+          <div class="mock-q-pts">Öppnar 1 juli</div>
+        </div>
+        <div class="mock-nav">
+          <div class="mock-nav-item">Hem</div>
+          <div class="mock-nav-item active">Tips</div>
+          <div class="mock-nav-item">Tabell</div>
+          <div class="mock-nav-item">Admin</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Följ tabellen live</div>
+        <div class="step-desc">Admin rättar efter varje fas. Tabellen uppdateras direkt — kolla var du ligger.</div>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="mock-header"><span class="mock-header-title">Tabellen</span><span class="mock-header-sub">Pott: 1 000 kr</span></div>
+      <div class="mock-body">
+        <div class="mock-lb-row"><span class="mock-lb-medal">🥇</span><div class="mock-lb-avatar" style="background:#faeeda;color:#854f0b">AM</div><span class="mock-lb-name">Amanda</span><span class="mock-lb-pts">48 pts</span></div>
+        <div class="mock-lb-row"><span class="mock-lb-medal">🥈</span><div class="mock-lb-avatar" style="background:#e6f1fb;color:#0c447c">SH</div><span class="mock-lb-name">Shalom</span><span class="mock-lb-pts">41 pts</span></div>
+        <div class="mock-lb-row"><span class="mock-lb-medal">🥉</span><div class="mock-lb-avatar" style="background:#eaf3de;color:#3b6d11">AD</div><span class="mock-lb-name">Adde</span><span class="mock-lb-pts">37 pts</span></div>
+        <div class="mock-nav" style="margin-top:6px">
+          <div class="mock-nav-item">Hem</div>
+          <div class="mock-nav-item">Tips</div>
+          <div class="mock-nav-item active">Tabell</div>
+          <div class="mock-nav-item">Admin</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">Nya frågor varje fas</div>
+        <div class="step-desc">När en ny fas öppnar får du ett meddelande. Gå in och svara innan deadline.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-section">
+    <div class="timeline-title">Deadlines — alla omgångar</div>
+
+    <div class="tl-row">
+      <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-connector"></div></div>
+      <div class="tl-body">
+        <div class="tl-date">11 juni</div>
+        <div class="tl-stage">Omgång 1 — Gruppspel</div>
+        <div class="tl-desc">19 frågor. Svara innan första avsparken. Ju tidigare, desto mer poäng.</div>
+        <span class="tl-badge tl-badge-open">Öppen nu</span>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-line-wrap"><div class="tl-dot locked"></div><div class="tl-connector"></div></div>
+      <div class="tl-body">
+        <div class="tl-date">1 juli</div>
+        <div class="tl-stage">Omgång 2 — Omgång 32</div>
+        <div class="tl-desc">Nya frågor låses upp. Svara innan första matchen i Omgång 32.</div>
+        <span class="tl-badge tl-badge-locked">Låst</span>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-line-wrap"><div class="tl-dot locked"></div><div class="tl-connector"></div></div>
+      <div class="tl-body">
+        <div class="tl-date">9 juli</div>
+        <div class="tl-stage">Omgång 3 — Kvartsfinaler</div>
+        <div class="tl-desc">Nya frågor. Svara innan kvartsfinalernas start.</div>
+        <span class="tl-badge tl-badge-locked">Låst</span>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-line-wrap"><div class="tl-dot locked"></div><div class="tl-connector"></div></div>
+      <div class="tl-body">
+        <div class="tl-date">15 juli</div>
+        <div class="tl-stage">Omgång 4 — Semifinaler</div>
+        <div class="tl-desc">Nya frågor. Svara innan semifinalernas start.</div>
+        <span class="tl-badge tl-badge-locked">Låst</span>
+      </div>
+    </div>
+
+    <div class="tl-row">
+      <div class="tl-line-wrap"><div class="tl-dot locked"></div></div>
+      <div class="tl-body" style="padding-bottom:4px">
+        <div class="tl-date">19 juli</div>
+        <div class="tl-stage">Omgång 5 — Finalen</div>
+        <div class="tl-desc">Sista frågorna. Svar måste vara inne innan finalen börjar. Vinnaren koras samma kväll!</div>
+        <span class="tl-badge tl-badge-locked">Låst</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>
