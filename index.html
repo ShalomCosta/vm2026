@@ -834,7 +834,7 @@ const TRANSLATIONS = {
     sectionSweden: 'Sweden 🇸🇪',
     sectionBrazil: 'Brazil 🇧🇷',
     sectionHardcore: 'For real fans',
-    stageBannerStatuses: ['Group Stage ⚽','Round of 32','Quarter-finals','Semi-finals','Final'],
+    stageBannerStatuses: ['Group Stage ⚽', 'Round of 32 🏆', 'Quarter-finals 🏁', 'Semi-finals', 'Final'],
   }
 };
 
@@ -869,7 +869,70 @@ const QUESTIONS = {
     { id: 'q17', section: 'brazil', type: 'select', options: ['1:a', '2:a', '3:a', 'Utslagna'], optionsEn: ['1st', '2nd', '3rd', 'Out'], sv: 'Vilken placering slutar Brasilien på i gruppen?', en: 'Brazil finishes the group in what position?', pts: 2 },
     { id: 'q18', section: 'brazil', type: 'yesno', sv: 'Kommer Neymar att spela alla gruppspelsmatcher?', en: 'Will Neymar play all group stage games?', pts: 3 }
   ],
-  wave2: [], // Future Knockout phase updates go here
+  wave2: [
+    { 
+      id: 'r32_q1', 
+      section: 'world', 
+      type: 'select', 
+      options: ['Mexiko', 'USA', 'Kanada'], 
+      optionsEn: ['Mexico', 'USA', 'Canada'], 
+      sv: 'Vilken värdnation tar sig längst i slutspelet?', 
+      en: 'Which host nation goes furthest in the knockout stage?', 
+      pts: 2 
+    },
+    { 
+      id: 'r32_q2', 
+      section: 'world', 
+      type: 'text', 
+      sv: 'Vilket lag gör flest mål i en enskild åttondelsfinal? (fritext, lagnamn)', 
+      en: 'Which team will score the most goals in a single round of 32 match? (free text, team name)', 
+      pts: 3 
+    },
+    { 
+      id: 'r32_q3', 
+      section: 'world', 
+      type: 'select', 
+      options: ['0', '1-2', '3-4', '5+'], 
+      optionsEn: ['0', '1-2', '3-4', '5+'], 
+      sv: 'Hur många åttondelsfinaler avgörs i förlängning eller på straffar?', 
+      en: 'How many round of 32 matches will go to extra time or penalties?', 
+      pts: 3 
+    },
+    { 
+      id: 'r32_q4', 
+      section: 'world', 
+      type: 'text', 
+      sv: 'Namnge ett lag som slås ut på straffar i denna omgång. (fritext)', 
+      en: 'Name one team that will be eliminated on penalties in this round. (free text)', 
+      pts: 1 
+    },
+    { 
+      id: 'r32_q5', 
+      section: 'world', 
+      type: 'text', 
+      sv: 'Vilket/vilka av dessa "bästa tre-or"-lag tar sig längst: Sverige, Bosnien-Hercegovina, Senegal eller Paraguay? (Skriv ditt svar)', 
+      en: 'Which of these "third-place qualifiers" goes furthest: Sweden, Bosnia & Herzegovina, Senegal, or Paraguay? (Type your choices)', 
+      pts: 3 
+    },
+    { 
+      id: 'r32_q6', 
+      section: 'world', 
+      type: 'number', 
+      sv: 'Totalt antal mål i alla 16 åttondelsfinaler — närmaste gissning vinner.', 
+      en: 'Total number of goals scored across all 16 round of 32 matches — closest guess wins.', 
+      pts: 5 
+    },
+    { 
+      id: 'r32_q7', 
+      section: 'world', 
+      type: 'select', 
+      options: ['UEFA/Europa', 'CAF/Afrika', 'CONMEBOL/Sydamerika', 'Annat – Concacaf/AFC'], 
+      optionsEn: ['UEFA/Europe', 'CAF/Africa', 'CONMEBOL/South America', 'Other – Concacaf/AFC'], 
+      sv: 'Vilket förbund kommer ha flest lag kvar i åttondelen, det vill säga går vidare från denna omgång?', 
+      en: 'Which confederation will have the most teams in the round of 16 (survive round of 32)?', 
+      pts: 4 
+    }
+  ], // Future Knockout phase updates go here
   wave3: [],
   wave4: [],
   wave5: []
@@ -884,7 +947,7 @@ let state = {
   answers: {},
   scores: {},
   submitted: {},
-  stageStatus: { wave1:'open', wave2:'locked', wave3:'locked', wave4:'locked', wave5:'locked' },
+  stageStatus: { wave1:'scored', wave2:'open', wave3:'locked', wave4:'locked', wave5:'locked' },
   correctAnswers: {},
   manualAdjustments: {}
 };
@@ -1022,7 +1085,10 @@ function renderQuestions() {
     submitWrap.style.display = 'block';
   }
 
-  const allQs = QUESTIONS.wave1;
+  // Find the currently open wave, defaulting back to wave1 if none found
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const allQs = QUESTIONS[activeWave]; // Now pulls the active wave dynamically!
+
   const answered = allQs.filter(q => {
     const a = (state.answers[state.currentPlayer] || {})[q.id];
     return a !== undefined && a !== '' && a !== null;
@@ -1116,7 +1182,9 @@ async function saveAnswer(qId, value) {
   saveState();
 
   // Progress bar rendering math
-  const allQs = QUESTIONS.wave1;
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const allQs = QUESTIONS[activeWave];
+
   const answered = allQs.filter(q => {
     const a = (state.answers[state.currentPlayer] || {})[q.id];
     return a !== undefined && a !== '' && a !== null;
@@ -1150,17 +1218,19 @@ async function submitAnswers() {
   const player = state.currentPlayer;
   const currentAnswersObject = state.answers[player] || {};
 
-  // Push the final answers payload into your Supabase predictions table
+  const activeWaveStr = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const waveInt = parseInt(activeWaveStr.replace('wave', ''));
+
   const { data, error } = await _supabase
     .from('predictions')
     .upsert([
       { 
         player_id: player, 
-        wave: 1, 
+        wave: waveInt, 
         answers: currentAnswersObject,
         locked: true 
       }
-    ], { onConflict: 'player_id,wave' }); 
+    ], { onConflict: 'player_id,wave' });
 
   if (error) {
     console.error("Supabase failed to lock predictions:", error.message);
