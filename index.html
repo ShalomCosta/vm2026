@@ -1464,6 +1464,12 @@ async function unlockStage(wave) {
     .update({ status: 'open' })
     .eq('wave', wave);
 
+  const waveInt = parseInt(wave.replace('wave', ''));
+  await adminClient
+    .from('state')
+    .update({ current_wave: waveInt })
+    .eq('id', 'app_state');
+
   showToast(t('toastUnlocked'));
   renderStageList();
 }
