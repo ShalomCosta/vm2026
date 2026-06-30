@@ -1678,45 +1678,40 @@ function showToast(msg) {
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 async function initApp() {
   loadState();
-
   const { data: players, error } = await _supabase
     .from('players')
     .select('id, name, points')
     .order('points', { ascending: false });
-
   if (!error && players) {
     state.players = players.map(p => p.name);
     players.forEach(p => {
       state.scores[p.name] = p.points || 0;
     });
   }
-
   // NEW: pull real stage status from Supabase, overwrite local cache
   const { data: stages, error: stagesError } = await _supabase
     .from('stages')
     .select('wave, status');
-
   if (!stagesError && stages) {
     stages.forEach(s => {
       state.stageStatus[s.wave] = s.status;
     });
   }
-
-const { data: preds } = await _supabase
-  .from('predictions')
-  .select('player_id, wave, answers, locked')
-  .eq('locked', true);
-
-if (preds) {
-  preds.forEach(row => {
-    const waveKey = 'wave' + row.wave;
-    if (!state.submitted[row.player_id]) state.submitted[row.player_id] = {};
-    state.submitted[row.player_id][waveKey] = true;
-
-    if (!state.answers[row.player_id]) state.answers[row.player_id] = {};
-    state.answers[row.player_id] = { ...state.answers[row.player_id], ...row.answers };
-  });
-}
+  // Reset submitted before rebuilding from DB to clear any stale localStorage format
+  state.submitted = {};
+  const { data: preds } = await _supabase
+    .from('predictions')
+    .select('player_id, wave, answers, locked')
+    .eq('locked', true);
+  if (preds) {
+    preds.forEach(row => {
+      const waveKey = 'wave' + row.wave;
+      if (!state.submitted[row.player_id]) state.submitted[row.player_id] = {};
+      state.submitted[row.player_id][waveKey] = true;
+      if (!state.answers[row.player_id]) state.answers[row.player_id] = {};
+      state.answers[row.player_id] = { ...state.answers[row.player_id], ...row.answers };
+    });
+  }
 
   saveState();
   applyTranslations();
