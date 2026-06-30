@@ -1069,7 +1069,8 @@ function selectPlayer(name) {
 
 function renderQuestions() {
   const wrap = document.getElementById('questionsWrap');
-  const submitted = state.submitted[state.currentPlayer];
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const submitted = (state.submitted[state.currentPlayer] || {})[activeWave];
   const banner = document.getElementById('submittedBanner');
   const submitWrap = document.getElementById('submitWrap');
 
@@ -1086,7 +1087,6 @@ function renderQuestions() {
   }
 
   // Find the currently open wave, defaulting back to wave1 if none found
-  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
   const allQs = QUESTIONS[activeWave]; // Now pulls the active wave dynamically!
 
   const answered = allQs.filter(q => {
@@ -1174,7 +1174,8 @@ function buildQuestionCard(q, locked) {
 // ─── PREDICTIONS (DB TRACKING & LOCK ENGINE) ─────────────────────────────────
 async function saveAnswer(qId, value) {
   if (!state.currentPlayer) return;
-  if (state.submitted[state.currentPlayer]) return;
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  if ((state.submitted[state.currentPlayer] || {})[activeWave]) return;
   if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
   
   // Update local memory
@@ -1182,7 +1183,6 @@ async function saveAnswer(qId, value) {
   saveState();
 
   // Progress bar rendering math
-  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
   const allQs = QUESTIONS[activeWave];
 
   const answered = allQs.filter(q => {
@@ -1200,7 +1200,8 @@ async function saveAnswer(qId, value) {
 }
 
 async function adjustNumber(qId, delta) {
-  if (!state.currentPlayer || state.submitted[state.currentPlayer]) return;
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  if (!state.currentPlayer || (state.submitted[state.currentPlayer] || {})[activeWave]) return;
   if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
   
   const cur = state.answers[state.currentPlayer][qId] || 0;
@@ -1214,10 +1215,9 @@ async function adjustNumber(qId, delta) {
 
 async function submitAnswers() {
   if (!state.currentPlayer) return;
-  
+
   const player = state.currentPlayer;
   const currentAnswersObject = state.answers[player] || {};
-
   const activeWaveStr = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
   const waveInt = parseInt(activeWaveStr.replace('wave', ''));
 
@@ -1239,7 +1239,9 @@ async function submitAnswers() {
   }
 
   // Update local submission status only if the database write succeeded
-  state.submitted[player] = new Date().toISOString();
+  if (!state.submitted[player]) state.submitted[player] = {};
+  state.submitted[player][activeWaveStr] = new Date().toISOString();
+
   saveState();
   showToast(t('toastSubmitted'));
   renderQuestions();
@@ -1694,17 +1696,21 @@ async function initApp() {
     });
   }
 
-  const { data: preds } = await _supabase
-    .from('predictions')
-    .select('player_id, answers, locked')
-    .eq('locked', true);
+const { data: preds } = await _supabase
+  .from('predictions')
+  .select('player_id, wave, answers, locked')
+  .eq('locked', true);
 
-  if (preds) {
-    preds.forEach(row => {
-      state.submitted[row.player_id] = state.submitted[row.player_id] || true;
-      state.answers[row.player_id] = row.answers;
-    });
-  }
+if (preds) {
+  preds.forEach(row => {
+    const waveKey = 'wave' + row.wave;
+    if (!state.submitted[row.player_id]) state.submitted[row.player_id] = {};
+    state.submitted[row.player_id][waveKey] = true;
+
+    if (!state.answers[row.player_id]) state.answers[row.player_id] = {};
+    state.answers[row.player_id] = { ...state.answers[row.player_id], ...row.answers };
+  });
+}
 
   saveState();
   applyTranslations();
