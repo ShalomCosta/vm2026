@@ -1449,9 +1449,19 @@ function renderPlayerStageList() {
     list.appendChild(row);
   });
 }
-function unlockStage(wave) {
+async function unlockStage(wave) {
   state.stageStatus[wave] = 'open';
   saveState();
+
+  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { 'x-admin-pass': 'VM2026admin' } }
+  });
+
+  await adminClient
+    .from('stages')
+    .update({ status: 'open' })
+    .eq('wave', wave);
+
   showToast(t('toastUnlocked'));
   renderStageList();
 }
@@ -1565,6 +1575,11 @@ async function applyScores() {
   state.stageStatus[scoringWave] = 'scored';
   saveState();
 
+  await adminClient
+    .from('stages')
+    .update({ status: 'scored' })
+    .eq('wave', scoringWave);
+
   // Push updated points arrays up to Supabase
   const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: { headers: { 'x-admin-pass': 'VM2026admin' } }
@@ -1665,6 +1680,17 @@ async function initApp() {
     state.players = players.map(p => p.name);
     players.forEach(p => {
       state.scores[p.name] = p.points || 0;
+    });
+  }
+
+  // NEW: pull real stage status from Supabase, overwrite local cache
+  const { data: stages, error: stagesError } = await _supabase
+    .from('stages')
+    .select('wave, status');
+
+  if (!stagesError && stages) {
+    stages.forEach(s => {
+      state.stageStatus[s.wave] = s.status;
     });
   }
 
