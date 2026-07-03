@@ -766,8 +766,8 @@ const TRANSLATIONS = {
     unlockBtn: 'Lås upp', scoreBtn: 'Rätta', scoredLabel: 'Rättad',
     navHome: 'Hem', navTips: 'Tips', navTable: 'Tabell', navAdmin: 'Admin',
     langBtn: 'EN',
-    stages: ['Gruppspel','Omgång 32','Kvartsfinaler','Semifinaler','Final'],
-    stageDeadlines: ['Deadline: 11 jun','Öppnar: 1 jul','Öppnar: 9 jul','Öppnar: 15 jul','Öppnar: 19 jul'],
+    stages: ['Gruppspel','Omgång 32','Omgång 16','Kvartsfinaler','Semifinaler','Final'],
+    stageDeadlines: ['Deadline: 11 jun','Öppnar: 1 jul','Öppnar: 5 jul','Öppnar: 9 jul','Öppnar: 14 jul','Öppnar: 19 jul'],
     correctAnswerPlaceholder: 'Rätt svar...',
     correctYes: 'Ja', correctNo: 'Nej',
     ptsLabel: 'poäng',
@@ -788,7 +788,7 @@ const TRANSLATIONS = {
     sectionSweden: 'Sverige 🇸🇪',
     sectionBrazil: 'Brasilien 🇧🇷',
     sectionHardcore: 'För riktiga fans',
-    stageBannerStatuses: ['Gruppspel ⚽','Omgång 32','Kvartsfinaler','Semifinaler','Final'],
+    stageBannerStatuses: ['Gruppspel ⚽','Omgång 32','Omgång 16','Kvartsfinaler','Semifinaler','Final'],
   },
   en: {
     headerTitle: 'WC 2026 — Family League',
@@ -933,9 +933,24 @@ const QUESTIONS = {
       pts: 4 
     }
   ], // Future Knockout phase updates go here
-  wave3: [],
-  wave4: [],
-  wave5: []
+  wave3: [
+    { id: 'r16_q1', section: 'world', type: 'text', sv: 'Vilket värdland tar sig vidare till kvartsfinalerna? (fritext, lagnamn)', en: 'Which host nation advances to the quarter-finals? (free text, team name)', pts: 2 },
+    { id: 'r16_q2', section: 'brazil', type: 'text', sv: 'Vilket slutresultat blir det i Brasilien vs Norge? (fritext, t.ex. 2–1)', en: 'What will the final score be in Brazil vs Norway? (free text, e.g. 2–1)', pts: 3 },
+    { id: 'r16_q3', section: 'world', type: 'text', sv: 'Vilket lag vinner med flest mål i denna omgång? (fritext, lagnamn)', en: 'Which team wins by the most goals in this round? (free text, team name)', pts: 3 },
+    { id: 'r16_q4', section: 'world', type: 'number', sv: 'Totalt antal mål i alla 8 matcher i omgången — närmaste gissning vinner.', en: 'Total goals across all 8 matches in this round — closest guess wins.', pts: 5 },
+    { id: 'r16_q5', section: 'world', type: 'select', options: ['0','1','2','3+'], optionsEn: ['0','1','2','3+'], sv: 'Hur många matcher avgörs i förlängning eller på straffar?', en: 'How many matches are decided by extra time or penalties?', pts: 3 },
+    { id: 'r16_q6', section: 'world', type: 'select', options: ['Mbappé','Messi','Haaland','Kane'], optionsEn: ['Mbappé','Messi','Haaland','Kane'], sv: 'Vem gör flest mål i omgång 16 — Mbappé, Messi, Haaland eller Kane?', en: 'Who scores the most goals in the round of 16 — Mbappé, Messi, Haaland, or Kane?', pts: 4 }
+  ],
+  wave4: [
+    { id: 'qf_q1', section: 'world', type: 'select', options: ['0','1','2','3–4'], optionsEn: ['0','1','2','3–4'], sv: 'Hur många kvartsfinaler avgörs i förlängning eller på straffar?', en: 'How many quarter-finals are decided by extra time or penalties?', pts: 3 },
+    { id: 'qf_q2', section: 'world', type: 'text', sv: 'Vilka 4 lag går vidare till semifinalerna? (namnge alla 4)', en: 'Which 4 teams advance to the semi-finals? (name all 4)', pts: 5 },
+    { id: 'qf_q3', section: 'world', type: 'number', sv: 'Totalt antal mål i alla 4 kvartsfinaler — närmaste gissning vinner.', en: 'Total goals across all 4 quarter-final matches — closest guess wins.', pts: 5 },
+    { id: 'qf_q4', section: 'world', type: 'text', sv: 'Vem leder skytteligan efter kvartsfinalerna?', en: 'Who leads the Golden Boot after the quarter-finals?', pts: 3 },
+    { id: 'qf_q5', section: 'world', type: 'number', sv: 'Hur många gula och röda kort delas ut totalt i kvartsfinalerna? (närmaste gissning vinner)', en: 'How many yellow and red cards are shown in total across all quarter-finals? (closest guess wins)', pts: 3 },
+    { id: 'qf_q6', section: 'world', type: 'number', sv: 'Hur många mål annulleras för offside i kvartsfinalerna? (närmaste gissning vinner)', en: 'How many goals are ruled out for offside across all quarter-finals? (closest guess wins)', pts: 3 }
+  ],
+  wave5: [],
+  wave6: []
 };
 
 // ─── STATE ───────────────────────────────────────────────────────────────────
@@ -947,7 +962,7 @@ let state = {
   answers: {},
   scores: {},
   submitted: {},
-  stageStatus: { wave1:'scored', wave2:'open', wave3:'locked', wave4:'locked', wave5:'locked' },
+  stageStatus: { wave1:'scored', wave2:'open', wave3:'locked', wave4:'locked', wave5:'locked', wave6:'locked' },
   correctAnswers: {},
   manualAdjustments: {}
 };
@@ -1021,7 +1036,7 @@ function renderHome() {
   document.getElementById('stat2Value').textContent = Math.round(pot * 0.3).toLocaleString('sv-SE') + ' kr';
   document.getElementById('stat3Value').textContent = Math.round(pot * 0.1).toLocaleString('sv-SE') + ' kr';
   
-  const openStageIdx = ['wave1','wave2','wave3','wave4','wave5'].findIndex(w => state.stageStatus[w] === 'open');
+  const openStageIdx = ['wave1','wave2','wave3','wave4','wave5','wave6'].findIndex(w => state.stageStatus[w] === 'open');
   const idx = openStageIdx === -1 ? 0 : openStageIdx;
   document.getElementById('stageBannerStatus').textContent = t('stageBannerStatuses')[idx];
   renderPlayerStageList();
@@ -1069,7 +1084,7 @@ function selectPlayer(name) {
 
 function renderQuestions() {
   const wrap = document.getElementById('questionsWrap');
-  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5','wave6'].find(w => state.stageStatus[w] === 'open') || 'wave1';
   const submitted = (state.submitted[state.currentPlayer] || {})[activeWave];
   const banner = document.getElementById('submittedBanner');
   const submitWrap = document.getElementById('submitWrap');
@@ -1122,7 +1137,7 @@ function renderQuestions() {
   });
 
   // Wave 2+ locked
-  ['wave2','wave3','wave4','wave5'].forEach((w, i) => {
+  ['wave2','wave3','wave4','wave5','wave6'].forEach((w, i) => {
     const labels = t('stages');
     if (state.stageStatus[w] === 'locked') {
       wrap.innerHTML += `<div class="section-header"><span class="section-badge badge-locked">${labels[i+1]}</span></div>
@@ -1174,7 +1189,7 @@ function buildQuestionCard(q, locked) {
 // ─── PREDICTIONS (DB TRACKING & LOCK ENGINE) ─────────────────────────────────
 async function saveAnswer(qId, value) {
   if (!state.currentPlayer) return;
-  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5','wave6'].find(w => state.stageStatus[w] === 'open') || 'wave1';
   if ((state.submitted[state.currentPlayer] || {})[activeWave]) return;
   if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
   
@@ -1200,7 +1215,7 @@ async function saveAnswer(qId, value) {
 }
 
 async function adjustNumber(qId, delta) {
-  const activeWave = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const activeWave = ['wave1','wave2','wave3','wave4','wave5','wave6'].find(w => state.stageStatus[w] === 'open') || 'wave1';
   if (!state.currentPlayer || (state.submitted[state.currentPlayer] || {})[activeWave]) return;
   if (!state.answers[state.currentPlayer]) state.answers[state.currentPlayer] = {};
   
@@ -1218,7 +1233,7 @@ async function submitAnswers() {
 
   const player = state.currentPlayer;
   const currentAnswersObject = state.answers[player] || {};
-  const activeWaveStr = ['wave1','wave2','wave3','wave4','wave5'].find(w => state.stageStatus[w] === 'open') || 'wave1';
+  const activeWaveStr = ['wave1','wave2','wave3','wave4','wave5','wave6'].find(w => state.stageStatus[w] === 'open') || 'wave1';
   const waveInt = parseInt(activeWaveStr.replace('wave', ''));
 
   const { data, error } = await _supabase
@@ -1384,7 +1399,7 @@ function renderPlayerList() {
   state.players.forEach(p => {
     const row = document.createElement('div');
     row.className = 'player-admin-row';
-    const sub = state.submitted[p] ? (state.lang==='sv'?'✓ Inlämnad':'✓ Submitted') : (state.lang==='sv'?'Ej inlämnad':'Not submitted');
+    const sub = Object.keys(state.submitted[p] || {}).length > 0 ? (state.lang==='sv'?'✓ Inlämnad':'✓ Submitted') : (state.lang==='sv'?'Ej inlämnad':'Not submitted');
     row.innerHTML = `<span>${p} <span style="font-size:11px;color:var(--muted)">· ${sub}</span></span>
       <button class="delete-btn" onclick="removePlayer('${p}')">✕</button>`;
     list.appendChild(row);
@@ -1394,7 +1409,7 @@ function renderPlayerList() {
 function renderStageList() {
   const list = document.getElementById('stageList');
   list.innerHTML = '';
-  const stages = ['wave1','wave2','wave3','wave4','wave5'];
+  const stages = ['wave1','wave2','wave3','wave4','wave5','wave6'];
   stages.forEach((w, i) => {
     const status = state.stageStatus[w];
     const label = t('stages')[i];
@@ -1421,7 +1436,7 @@ function renderPlayerStageList() {
   if (!list) return;
   list.innerHTML = '';
   
-  const stages = ['wave1', 'wave2', 'wave3', 'wave4', 'wave5'];
+  const stages = ['wave1','wave2','wave3','wave4','wave5','wave6'];
   
   stages.forEach((w, i) => {
     const status = state.stageStatus[w];
@@ -1645,7 +1660,7 @@ function exportCSV() {
   const allQs = QUESTIONS.wave1;
   const headers = ['Player','Submitted',...allQs.map(q=>q.en),'Total Points'];
   const rows = state.players.map(p => {
-    const submitted = state.submitted[p] ? new Date(state.submitted[p]).toLocaleString() : 'No';
+    const submitted = Object.keys(state.submitted[p] || {}).length > 0 ? Object.values(state.submitted[p]).map(d => new Date(d).toLocaleString()).join(' | ') : 'No';
     const answers = allQs.map(q => {
       let a = (state.answers[p]||{})[q.id];
       if (a === 'yes') a = 'Yes';
