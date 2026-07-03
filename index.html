@@ -1598,6 +1598,10 @@ async function applyScores() {
   state.stageStatus[scoringWave] = 'scored';
   saveState();
 
+  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { 'x-admin-pass': 'VM2026admin' } }
+  });
+
   await adminClient
     .from('stages')
     .update({ status: 'scored' })
