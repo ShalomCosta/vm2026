@@ -1363,7 +1363,7 @@ async function addPlayer() {
 }
 
 async function removePlayer(name) {
-  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  (SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: {
       headers: { 'x-admin-pass': 'VM2026admin' }
     }
@@ -1578,7 +1578,6 @@ async function applyScores() {
       }
     });
   });
-
   qs.filter(q => q.type === 'number').forEach(q => {
     const correct = parseInt(state.correctAnswers[q.id]);
     if (isNaN(correct)) return;
@@ -1594,31 +1593,22 @@ async function applyScores() {
       if (diff === minDiff) state.scores[p] = (state.scores[p] || 0) + q.pts;
     });
   });
-
   state.stageStatus[scoringWave] = 'scored';
   saveState();
-
   const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     global: { headers: { 'x-admin-pass': 'VM2026admin' } }
   });
-
   await adminClient
     .from('stages')
     .update({ status: 'scored' })
     .eq('wave', scoringWave);
-
   // Push updated points arrays up to Supabase
-  const adminClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: { headers: { 'x-admin-pass': 'VM2026admin' } }
-  });
-
   for (const name of state.players) {
     await adminClient
       .from('players')
       .update({ points: state.scores[name] || 0 })
       .eq('id', name);
   }
-
   showToast(t('toastScoresApplied'));
   closeScoringPanel();
   renderStageList();
